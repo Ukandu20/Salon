@@ -1,0 +1,103 @@
+/* Home.module.css */
+
+/* Hero section */
+.hero {
+  background-color: #CBB74B;
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+}
+
+.hero_content {
+  max-width: 800px;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.5rem;
+  margin-bottom: 40px;
+}
+
+.hero_button {
+  padding: 15px 30px;
+  background-color: #CBB74B;
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+.hero_button:hover {
+  background-color: #F5CF6B;
+}
+
+/* Other sections */
+.about_section,
+.gallery_section,
+.testimonials_section,
+.contact_section {
+  padding: 80px 0;
+  background-color: #F9F9F9;
+}
+
+.about_content,
+.gallery_content,
+.testimonials_content,
+.contact_content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.about_content h2,
+.gallery_content h2,
+.testimonials_content h2,
+.contact_content h2 {
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.about_content p,
+.gallery_content p,
+.testimonials_content p,
+.contact_content p {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+}
+
+.learn_more_button,
+.view_gallery_button,
+.view_testimonials_button,
+.contact_button {
+  padding: 12px 24px;
+  background-color: #CBB74B;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+.learn_more_button:hover,
+.view_gallery_button:hover,
+.view_testimonials_button:hover,
+.contact_button:hover {
+  background-color: #F5CF6B;
+}
+
+.footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+}
