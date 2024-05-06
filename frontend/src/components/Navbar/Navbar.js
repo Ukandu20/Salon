@@ -1,5 +1,8 @@
 import React from 'react';
 import classes from './Navbar.module.css';
+import { Button } from '../ui/button';
+
+
 
 export default function Navbar() {
 
@@ -32,12 +35,12 @@ export default function Navbar() {
                     </li>                    
                 </ul>
                 <ul>
-                    <li>
-                        <a href='/appointments' className={classes.appointment} >
-                            Book appointment
-                        </a>
+                    <li>              
+                        <Button asChild>
+                            <a href="/appointments">Book appointment</a>
+                        </Button>
                     </li>
-                </ul>                
+                </ul>                            
             </nav>
         </div>
     );

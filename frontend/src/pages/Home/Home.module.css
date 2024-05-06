@@ -2,9 +2,6 @@
 
 /* Hero section */
 .hero {
-  background-color: #CBB74B;
-  background-size: cover;
-  background-position: center;
   height: 100vh;
   display: flex;
   align-items: center;
@@ -28,11 +25,8 @@
 }
 
 .hero_button {
-  padding: 15px 30px;
-  background-color: #CBB74B;
-  color: white;
+  padding: 15px 30px;  
   text-decoration: none;
-  border-radius: 50px;
   transition: background-color 0.3s ease;
   font-weight: bold;
 }
@@ -47,7 +41,6 @@
 .testimonials_section,
 .contact_section {
   padding: 80px 0;
-  background-color: #F9F9F9;
 }
 
 .about_content,

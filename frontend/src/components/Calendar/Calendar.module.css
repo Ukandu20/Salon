@@ -1,0 +1,40 @@
+.calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+}
+
+.weekDays, .daysGrid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    width: 100%;
+}
+
+.day, .weekDays div {
+    width: 14.28%; /* 100 / 7 */
+    text-align: center;
+    justify-self: unset;
+    padding: 10px 0;
+}
+
+.day {
+    cursor: pointer;
+    border: 1px solid #ccc;
+}
+
+.day:hover {
+    background-color: #eee;
+}
+
+.week {
+    width: 100%;
+}

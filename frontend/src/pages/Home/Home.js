@@ -1,5 +1,9 @@
 import React from 'react';
 import classes from './Home.module.css'; // Your CSS module for home page styles
+import { Button } from '../../components/ui/button'
+import { ReloadIcon } from '@radix-ui/react-icons';
+
+
 
 export default function Home() {
   return (
@@ -8,7 +12,10 @@ export default function Home() {
         <div className={classes.hero_content}>
           <h1>Welcome to Hair haven</h1>
           <p>Your premier destination for hair styling and beauty services.</p>
-          <a href="/services" className={classes.hero_button}>Explore Services</a>
+          <Button variant="ghost" className={classes.hero_button}>
+            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+            Explore Services
+          </Button>
         </div>
       </section>
       <section className={classes.about_section}>
