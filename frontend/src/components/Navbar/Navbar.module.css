@@ -39,7 +39,7 @@ nav ul li a:hover {
 }
 
 /* Active link styles */
-nav ul li a.active {
+ul li a.active {
   color: #CBB74B; /* Change this color to the one you want for the active link */
   text-decoration: underline;
   font-size: 1.5rem;
