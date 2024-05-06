@@ -3,6 +3,9 @@ import axios from 'axios';
 import classes from './Booking.module.css'; // Your CSS module for Booking page styles
 import { Calendar } from '../../components/ui/calendar'
 import { Button } from '../ui/button';
+import { useToast } from '@chakra-ui/react'
+
+
 
 
 
@@ -19,8 +22,9 @@ export default function Booking() {
 
     const [selectedDate, setSelectedDate] = useState(null); // Additional state to handle the calendar date immediately
     const [timeSlots, setTimeSlots] = useState([]);
-    const [successMessage, setSuccessMessage] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const [selectedTime, setSelectedTime] = useState('');
+    const toast = useToast();
+    
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -53,7 +57,10 @@ export default function Booking() {
 
     const handleTimeSelection = (time) => {
         setFormData({ ...formData, time });
+        setSelectedTime(time);
     };
+
+    
 
     const handleServiceSelection = (service) => {
         setFormData({ ...formData, service });
@@ -63,14 +70,25 @@ export default function Booking() {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:5000/api/bookings', formData);
-            console.log('Backend Response:', response.data);
             resetFormData();
-            setSuccessMessage('Booking successfully added!');
-            setErrorMessage('');
+            toast({
+                title: 'Booking Successful',
+                position: 'bottom-right',
+                description: 'Your booking has been successfully added!',
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            });
         } catch (error) {
             console.error('Error:', error);
-            setErrorMessage(`Error adding booking: ${error.response ? error.response.data.message : 'Server not reachable'}`);
-            setSuccessMessage('');
+            toast({
+                title: 'Error',
+                position: 'bottom-right',
+                description: `Error adding booking: ${error.response ? error.response.data.message : 'Server not reachable'}`,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
         }
     };
 
@@ -85,6 +103,7 @@ export default function Booking() {
             time: ''
         });
         setSelectedDate(null); // Clear selected date
+        setSelectedTime('');
         setTimeSlots([]);
     };
 
@@ -125,7 +144,7 @@ export default function Booking() {
                                     type="button"
                                     onClick={() => handleServiceSelection(service)}
                                     style={{
-                                        backgroundColor: formData.service === service ? '#007A76' : '#CBB74B', // Active service has a different color
+                                        backgroundColor: formData.service === service ?  '#CBB74B' : '#007A76', // Active service has a different color
                                         color: 'white',
                                         margin: '5px',
                                         padding: '10px 20px',
@@ -167,7 +186,7 @@ export default function Booking() {
                                     onClick={() => slot.available && handleTimeSelection(slot.time)}
                                     disabled={!slot.available}
                                     style={{
-                                        backgroundColor: slot.available ? '#007A76' : 'rose',
+                                        backgroundColor: slot.time === selectedTime && slot.available ? '#CBB74B' : slot.available ? '#007A76' : 'rose',
                                         color: 'white',
                                         margin: '5px',
                                         padding: '10px 20px',
@@ -183,22 +202,12 @@ export default function Booking() {
                     </div>
                     
                     <div className={classes.submitBtn}>
-                        <Button type="submit">Book Appointment</Button>
+                        <Button type="submit"
+
+                        >Book Appointment</Button>
                     </div>
 
-                    {/* Display success message if set */}
-                    {successMessage && (
-                        <div className={classes.successMessage}>
-                            {successMessage}
-                        </div>
-                    )}
-
-                    {/* Display error message if set */}
-                    {errorMessage && (
-                        <div className={classes.errorMessage}>
-                            {errorMessage}
-                        </div>
-                    )}
+                    
                 </div>
             </form>
 
