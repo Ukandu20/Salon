@@ -4,7 +4,9 @@ import router from './routers/router.js';
 import bookingRouter from './routers/booking.router.js';
 
 const app = express();
-app.use(express.json());
+
+// Add body parsing middleware here
+app.use(express.json()); // Enables parsing of JSON bodies
 
 
 // CORS configuration to allow requests from specific origins with credentials
