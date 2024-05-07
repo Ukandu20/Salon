@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import classes from './Booking.module.css'; // Your CSS module for Booking page styles
-import { Calendar } from '../../components/ui/calendar'
+import { Calendar } from '../../components/ui/calendar';
 import { Button } from '../ui/button';
-import { useToast } from '@chakra-ui/react'
-
-
-
-
+import { useToast } from '@chakra-ui/react';
 
 export default function Booking() {
     const [formData, setFormData] = useState({
@@ -16,33 +12,35 @@ export default function Booking() {
         phoneNumber: '',
         email: '',
         service: '',
-        date: '', // Ensure this is initially an empty string or a valid date string.
+        date: '',
         time: ''
     });
 
-    const [selectedDate, setSelectedDate] = useState(null); // Additional state to handle the calendar date immediately
+    const [selectedDate, setSelectedDate] = useState(null);
     const [timeSlots, setTimeSlots] = useState([]);
     const [selectedTime, setSelectedTime] = useState('');
     const toast = useToast();
-    
 
+    // Handles input changes for form fields
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Sets the date and fetches available time slots for that date
     const setDate = (newDate) => {
-        setSelectedDate(newDate); // Set selected date immediately for the calendar
+        setSelectedDate(newDate);
         setFormData({ ...formData, date: newDate.toISOString().split('T')[0] });
         fetchTimeSlots(newDate);
     };
 
+    // Update selectedDate when formData.date changes
     useEffect(() => {
-        // This effect ensures that the selectedDate state is updated when formData.date changes externally
         if (formData.date) {
             setSelectedDate(new Date(formData.date));
         }
     }, [formData.date]);
 
+    // Fetches time slots for a selected date
     const fetchTimeSlots = async (date) => {
         try {
             const formattedDate = date.toISOString().split('T')[0];
@@ -55,21 +53,22 @@ export default function Booking() {
         }
     };
 
+    // Handles selection of a time slot
     const handleTimeSelection = (time) => {
         setFormData({ ...formData, time });
         setSelectedTime(time);
     };
 
-    
-
+    // Handles service selection
     const handleServiceSelection = (service) => {
         setFormData({ ...formData, service });
     };
 
+    // Submits the booking form
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:5000/api/bookings', formData);
+            await axios.post('http://localhost:5000/api/bookings', formData);
             resetFormData();
             toast({
                 title: 'Booking Successful',
@@ -91,7 +90,9 @@ export default function Booking() {
             });
         }
     };
+    
 
+    // Resets form data after submission or on error
     const resetFormData = () => {
         setFormData({
             firstName: '',
@@ -102,13 +103,10 @@ export default function Booking() {
             date: '',
             time: ''
         });
-        setSelectedDate(null); // Clear selected date
+        setSelectedDate(null);
         setSelectedTime('');
         setTimeSlots([]);
     };
-
-
-
 
     return (
         <div className={classes.container}>
@@ -118,7 +116,9 @@ export default function Booking() {
             </section>
             
             <form onSubmit={handleSubmit} className={classes.form}>
+                {/* Form groups for input */}
                 <div className={classes.infoGrp}>
+                    {/* Name, phone, and email inputs */}
                     <div className={classes.formGrp}>
                         <input type="text" name="firstName" id="firstName" required placeholder='First Name' value={formData.firstName} onChange={handleInputChange} />
                     </div>
@@ -131,10 +131,11 @@ export default function Booking() {
                         <input type="tel" name="phoneNumber" id="phoneNumber" required placeholder='Enter Phone Number' value={formData.phoneNumber} onChange={handleInputChange}/>
                     </div>
 
-                    <div className={classes.formGrp}>                        
+                    <div className={classes.formGrp}>
                         <input type="email" name="email" id="email" required placeholder='Enter Email Address' value={formData.email} onChange={handleInputChange}/>
                     </div>
 
+                    {/* Service selection */}
                     <div className={classes.formGrp}>
                         <label>Service:</label>
                         <div>
@@ -161,20 +162,21 @@ export default function Booking() {
                     </div>
                 </div>
                 
+                {/* Date and time selection */}
                 <div className={classes.dateGrp}>
-                <div className={classes.calendar}>
-                    <Calendar
-                        type="date"
-                        name="date"
-                        id="date"
-                        required
-                        value={formData.date}
-                        onChange={handleInputChange}
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={setDate}
-                        className="rounded-md border shadow"
-                    />
+                    <div className={classes.calendar}>
+                        <Calendar
+                            type="date"
+                            name="date"
+                            id="date"
+                            required
+                            value={formData.date}
+                            onChange={handleInputChange}
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={setDate}
+                            className="rounded-md border shadow"
+                        />
                     </div>
                     
                     <div className={classes.time}>                        
@@ -198,20 +200,15 @@ export default function Booking() {
                                     {slot.time}
                                 </Button>
                             ))}
-                        </div>
+                                                </div>
                     </div>
                     
                     <div className={classes.submitBtn}>
-                        <Button type="submit"
-
-                        >Book Appointment</Button>
+                        <Button type="submit">Book Appointment</Button>
                     </div>
-
-                    
                 </div>
             </form>
-
-            
         </div>
     );
 }
+
