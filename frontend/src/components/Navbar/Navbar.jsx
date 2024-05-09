@@ -14,22 +14,22 @@ export default function Navbar() {
                 {/* Navigation links */}
                 <ul className={classes.nav_links}>
                     <li>
-                        <a href='/' className={window.location.pathname === '/about' ? 'active' : ''}>
+                        <a href='/' className={window.location.pathname === '/' ? 'classes.active' : ''}>
                             Home
                         </a>
                     </li>
                     <li>
-                        <a href='/Services' className={window.location.pathname === '/about' ? 'active' : ''}>
+                        <a href='/Services' className={window.location.pathname === '/Services' ? 'classes.active' : ''}>
                             Services
                         </a>
                     </li>
                     <li>
-                        <a href='/portfolio' className={window.location.pathname === '/portfolio' ? 'active' : ''}>
+                        <a href='/Gallery' className={window.location.pathname === '/Gallery' ? 'classes.active' : ''}>
                             Gallery
                         </a>
                     </li>
                     <li>
-                        <a href='/contact' className={window.location.pathname === '/contact' ? 'active' : ''}>
+                        <a href='/contact' className={window.location.pathname === '/contact' ? 'classes.active' : ''}>
                             Contact Us
                         </a>
                     </li>                    

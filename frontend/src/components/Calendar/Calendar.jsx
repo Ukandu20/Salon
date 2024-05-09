@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { Calendar } from '../../components/ui/calendar'
+import { Calendar } from '../ui/calendar'
 
 export function CalendarDemo() {
   const [date, setDate] = React.useState()
