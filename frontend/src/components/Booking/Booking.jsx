@@ -4,6 +4,8 @@ import classes from './Booking.module.css'; // Your CSS module for Booking page 
 import { Calendar } from '../ui/calendar';
 import { Button } from '../ui/button';
 import { useToast } from '@chakra-ui/react';
+import '../../axiosConfig';
+
 
 export default function Booking() {
     const [formData, setFormData] = useState({
@@ -44,7 +46,7 @@ export default function Booking() {
     const fetchTimeSlots = async (date) => {
         try {
             const formattedDate = date.toISOString().split('T')[0];
-            const response = await axios.get(`http://localhost:5000/api/bookings/date/${formattedDate}/time-slots`);
+            const response = await axios.get(`api/bookings/date/${formattedDate}/time-slots`);
             console.log("Time Slots Received:", response.data);
             setTimeSlots(response.data);
         } catch (error) {
@@ -68,7 +70,7 @@ export default function Booking() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/bookings', formData);
+            await axios.post('api/bookings', formData);
             resetFormData();
             toast({
                 title: 'Booking Successful',
