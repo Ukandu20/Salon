@@ -1,0 +1,8 @@
+h5{
+    display: flex;
+    font-weight: normal;
+    font-size: 0.5rem;
+    justify-content: center;
+    align-items: center;
+    color: red;
+  }

@@ -2,18 +2,19 @@ import React from 'react';
 import classes from './Home.module.css'; // Your CSS module for home page styles
 import { Button } from '../../components/ui/button'
 import { ReloadIcon } from '@radix-ui/react-icons';
+import Disclaimer from '@/components/Disclaimer/Disclaimer';
 
 
 
 export default function Home() {
   return (
     <div>
+      <Disclaimer/>
       <section className={classes.hero}>
         <div className={classes.hero_content}>
           <h1>Welcome to Hair haven</h1>
           <p>Your premier destination for hair styling and beauty services.</p>
           <Button variant="ghost" className={classes.hero_button}>
-            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
             Explore Services
           </Button>
         </div>
@@ -29,7 +30,7 @@ export default function Home() {
         <div className={classes.gallery_content}>
           <h2>Gallery</h2>
           <p>View our latest works and styles.</p>
-          <a href="/portfolio" className={classes.view_gallery_button}>View Gallery</a>
+          <a href="/Gallery" className={classes.view_gallery_button}>View Gallery</a>
         </div>
       </section>
       <section className={classes.testimonials_section}>

@@ -29,38 +29,22 @@ nav ul li a {
   padding: 15px 20px;
   color: black;
   text-decoration: none;
-  transition: color 0.3s ease-in-out;
+  transition: color 0.3s, transform 0.3s ease-in-out; /* Updated to include transform transition */
   font-size: 1.2rem;
 }
 
-/* Change link styles on hover */
-nav ul li a:hover {
-  color: goldenrod;
+/* Change nav_link styles on hover */
+.nav_links a:hover {
+  transform: scale(1.05);
 }
 
 /* Active link styles */
-ul li a.active {
-  color: #CBB74B; /* Change this color to the one you want for the active link */
+.nav_links a.active {
+  color: #CBB74B; /* Gold color for active links */
+  background-color: #333; /* Dark background for contrast */
   text-decoration: underline;
-  font-size: 1.5rem;
+  font-size: 1.5rem; /* Larger font size */
+  font-weight: bold; /* Make the font weight bold */
+  border-radius: 4px; /* Rounded corners for aesthetic */
 }
-
-/* Style the appointment link */
-.appointment {
-  margin-left: auto;
-  padding: 5px 10px;
-  text-decoration: none;
-  color: white;
-  background-color: #007A76;
-  border: 0.5px solid #007A76;
-  border-radius: 4px;
-  font-weight: normal;
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
-}
-
-.appointment:hover {
-  background-color: #005F5B;
-  color: #CBB74B;
-}
-
 
