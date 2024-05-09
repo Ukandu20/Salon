@@ -11,7 +11,7 @@ app.use(express.json()); // Enables parsing of JSON bodies
 
 // CORS configuration to allow requests from specific origins with credentials
 const corsOptions = {
-    origin: ['http://localhost:5173', 'https://salon-cartier.netlify.app'], // Allowed origins
+    origin: ['http://localhost:5173', 'https://salon-cartierkuti.netlify.app'], // Allowed origins
     credentials: true, // Allow credentials such as cookies, authorization headers, etc.
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'] // Allowed custom headers
