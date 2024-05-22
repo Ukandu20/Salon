@@ -1,9 +1,50 @@
-/* Footer.module.css */
-
 .footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-  }
-  
+  background-color: #2C3E50;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footerContent {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.links, .legal, .contactSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footerLink {
+  color: #fff;
+  margin: 5px;
+  text-decoration: none;
+}
+
+.contactButton {
+  margin-top: 10px;
+  background-color: #E74C3C;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.contactButton:hover {
+  background-color: #C0392B;
+}
+
+.copyRight {
+  margin-top: 20px;
+}
+
+.contactSection p {
+  text-align: center;
+  margin-top: 5px;
+}

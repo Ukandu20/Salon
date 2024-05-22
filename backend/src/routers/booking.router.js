@@ -1,69 +1,96 @@
 import { Router } from 'express';
-import { bookings } from '../assets/data/data.js';
+import { Booking } from '../assets/data/Booking.js'; // Correct path to import Booking model
+import mongoose from 'mongoose';
 
 const bookingRouter = Router();
-
-// Standard time slots for the salon
-const standardTimeSlots = ['9:00 AM', '1:00 PM', '5:00 PM'];
+const standardTimeSlots = ['9:00 AM', '11:00 AM', '1:00 PM', '5:00 PM'];
 
 // Get all bookings
-bookingRouter.get('/', (req, res) => {
-    res.json(bookings);
+bookingRouter.get('/', async (req, res) => {
+    try {
+        const query = req.query;  // Capture all query parameters
+        const bookings = await Booking.find(query);  // Pass query directly to find
+        res.json(bookings);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching bookings', error: err.message });
+    }
 });
 
-// Get bookings by date
-bookingRouter.get('/date/:date', (req, res) => {
-    const { date } = req.params;
-    const bookingsForDate = bookings.filter(booking => booking.date === date);
+// Get booking by specific parameter
+bookingRouter.get('/:field/:value', async (req, res) => {
+    try {
+        const { field, value } = req.params;
+        const query = {};
+        query[field] = field === '_id' ? mongoose.Types.ObjectId(value) : value;
+        const bookings = await Booking.find(query);
 
-    if (bookingsForDate.length === 0) {
-        return res.status(404).json({ message: 'No bookings found for this date' });
+        if (!bookings || bookings.length === 0) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+        res.json(bookings);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching booking', error: err.message });
     }
-
-    res.json(bookingsForDate);
 });
 
 // Create a new booking
-bookingRouter.post('/', (req, res) => {
+bookingRouter.post('/', async (req, res) => {
     const { firstName, lastName, phoneNumber, email, service, date, time } = req.body;
-
     if (!firstName || !lastName || !phoneNumber || !email || !service || !date || !time) {
         return res.status(400).json({ message: 'All fields are required.' });
     }
 
-    const isDuplicate = bookings.some(booking => 
-        booking.date === date && booking.time === time);
-    if (isDuplicate) {
-        return res.status(409).json({ message: 'A booking already exists with the given date, time' });
+    try {
+        const existingBooking = await Booking.findOne({ date: new Date(date), time });
+        if (existingBooking) {
+            return res.status(409).json({ message: 'A booking already exists with the given date and time' });
+        }
+
+        const newBooking = new Booking({ firstName, lastName, phoneNumber, email, service, date: new Date(date), time });
+        await newBooking.save();
+        res.status(201).json({ message: 'Booking created successfully.', booking: newBooking });
+    } catch (err) {
+        res.status(500).json({ message: 'Error creating booking', error: err.message });
     }
-
-    const newBooking = {
-        id: Math.random().toString(36).substr(2, 9),
-        firstName,
-        lastName,
-        phoneNumber,
-        email,
-        service,
-        date,
-        time
-    };
-
-    bookings.push(newBooking);
-
-    res.status(201).json({ message: 'Booking created successfully.', booking: newBooking });
 });
 
 // Get time slots for a specific date
-bookingRouter.get('/date/:date/time-slots', (req, res) => {
-    const { date } = req.params;
-    const bookingsForDate = bookings.filter(booking => booking.date === date);
+bookingRouter.get('/date/:date/time-slots', async (req, res) => {
+    try {
+        const { date } = req.params;
+        const bookings = await Booking.find({ date: new Date(date) });
+        const timeSlots = standardTimeSlots.map(slot => ({
+            time: slot,
+            available: !bookings.some(booking => booking.time === slot)
+        }));
+        res.json(timeSlots);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching time slots', error: err.message });
+    }
+});
 
-    const timeSlots = standardTimeSlots.map(slot => ({
-        time: slot,
-        available: !bookingsForDate.some(booking => booking.time === slot)
-    }));
+// Delete a single booking by ID
+bookingRouter.delete('/id/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedBooking = await Booking.findByIdAndDelete(id);
+        if (!deletedBooking) {
+            return res.status(404).json({ message: 'Booking not found' });
+        }
+        res.status(200).json({ message: 'Booking deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error deleting booking', error: err.message });
+    }
+});
 
-    res.json(timeSlots);
+// Delete all bookings
+bookingRouter.delete('/all', async (req, res) => {
+    try {
+        await Booking.deleteMany({});
+        res.status(200).json({ message: 'All bookings deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error deleting all bookings', error: err.message });
+    }
 });
 
 export default bookingRouter;

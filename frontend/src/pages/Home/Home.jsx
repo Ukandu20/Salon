@@ -1,52 +1,32 @@
 import React from 'react';
 import classes from './Home.module.css'; // Your CSS module for home page styles
-import { Button } from '../../components/ui/button'
+import { Button } from '../../components/ui/button';
 import { ReloadIcon } from '@radix-ui/react-icons';
 import Disclaimer from '@/components/Disclaimer/Disclaimer';
-
-
+import CollageComponent from '@/components/Collage/Collage'; // Import the CollageComponent
+import { LampContainer } from '../../components/ui/lamp'; // Adjust the import path according to your project structure
 
 export default function Home() {
   return (
     <div>
-      <Disclaimer/>
-      <section className={classes.hero}>
+      <LampContainer>
         <div className={classes.hero_content}>
-          <h1>Welcome to Hair haven</h1>
-          <p>Your premier destination for hair styling and beauty services.</p>
-          <Button variant="ghost" className={classes.hero_button}>
-            Explore Services
-          </Button>
+          <div className={classes.text_content}>
+            <h1>Welcome to Hair Haven</h1>
+            <p>Your premier destination for hair styling and beauty services.</p>
+            <div className={classes.buttons}>
+              <Button>
+                <a href="/Services">View Services</a>
+              </Button>
+              <Button>
+                <a href="/Gallery">View Gallery</a>
+              </Button>
+            </div>
+          </div>
+          <div className={classes.image_content}>
+          </div>
         </div>
-      </section>
-      <section className={classes.about_section}>
-        <div className={classes.about_content}>
-          <h2>About Us</h2>
-          <p>[Your salon's story and mission statement]</p>
-          <a href="/about" className={classes.learn_more_button}>Learn More</a>
-        </div>
-      </section>
-      <section className={classes.gallery_section}>
-        <div className={classes.gallery_content}>
-          <h2>Gallery</h2>
-          <p>View our latest works and styles.</p>
-          <a href="/Gallery" className={classes.view_gallery_button}>View Gallery</a>
-        </div>
-      </section>
-      <section className={classes.testimonials_section}>
-        <div className={classes.testimonials_content}>
-          <h2>Client Testimonials</h2>
-          <p>See what our clients have to say about their experiences.</p>
-          <a href="/testimonials" className={classes.view_testimonials_button}>View Testimonials</a>
-        </div>
-      </section>
-      <section className={classes.contact_section}>
-        <div className={classes.contact_content}>
-          <h2>Contact Us</h2>
-          <p>Get in touch to book an appointment or inquire about our services.</p>
-          <a href="/contact" className={classes.contact_button}>Contact Us</a>
-        </div>
-      </section>      
+      </LampContainer>
     </div>
   );
 }
