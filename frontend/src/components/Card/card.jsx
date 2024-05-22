@@ -43,39 +43,15 @@ export default function CardComponent() {  // Renamed to avoid conflict with HTM
                     This hairstyle is perfect for those who love a chic design with a
                     sprinkle of vintage design.
                     </Text>
-                    <Table>
-                        <TableCaption>Price List.</TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                            <TableHead className="w-[100px]">Length</TableHead>
-                            <TableHead className="text-right">Price</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell className="font-medium">12" & 14"</TableCell>
-                                <TableCell className="text-right">$150</TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className="font-medium">16" & 18"</TableCell>
-                                <TableCell className="text-right">$200</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
+                    
                 </Stack>       
             </CardBody>            
-            <CardFooter>
-                <Button variant="default" asChild>
-                    <a href="/appointments">Book appointment</a>
-                </Button>             
-            </CardFooter>
         </Card>
 
         <Card maxW='sm' style={{ backgroundColor: 'azure' }}>
             <CardBody>
                 <Stack mt='6' spacing='3' align='center'>
                     <Heading size='md'>Locs Retwists</Heading>
-
                     <Image
                         boxSize='250px'                        
                         objectFit="cover"
@@ -83,33 +59,12 @@ export default function CardComponent() {  // Renamed to avoid conflict with HTM
                         alt='Braids/Twists hairstyle image'
                         borderRadius='lg'
                     />
-                    <Table>
-                        <TableCaption>Price List.</TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[100px]">Service</TableHead>
-                                <TableHead className="text-right">Price</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell className="font-medium">Retwist</TableCell>
-                                <TableCell className="text-right">$60</TableCell>
-                            </TableRow>                            
-                            <TableRow>
-                                <TableCell className="font-medium">Full Service + Coloring</TableCell>
-                                <TableCell className="text-right">$200</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-
+                    <Text>
+                    This hairstyle is perfect for those who love a chic design with a
+                    sprinkle of vintage design.
+                    </Text>
                 </Stack>       
             </CardBody>            
-            <CardFooter>
-                <Button variant="default" asChild>
-                    <a href="/appointments">Book Appointment</a>
-                </Button>             
-            </CardFooter>
         </Card>
 
         <Card maxW='sm' style={{ backgroundColor: 'azure' }}>
@@ -124,8 +79,18 @@ export default function CardComponent() {  // Renamed to avoid conflict with HTM
                         alt='Braids/Twists hairstyle image'
                         borderRadius='lg'
                     />
-                    <Table>
-                        <TableCaption>Price List.</TableCaption>
+                    <Text>
+                    This hairstyle is perfect for those who love a chic design with a
+                    sprinkle of vintage design.
+                    </Text>
+                </Stack>       
+            </CardBody>            
+        </Card>        
+        </SimpleGrid>
+
+        <div className={classes.Tables}>
+        <Table>
+                        <TableCaption >Price List.</TableCaption>
                         <TableHeader>
                             <TableRow>
                             <TableHead className="w-[100px]">Style</TableHead>
@@ -187,17 +152,40 @@ export default function CardComponent() {  // Renamed to avoid conflict with HTM
                                     </Accordion>
                                 </TableCell>
                             </TableRow>
+                            <TableRow>
+                                <TableCell colSpan="2">
+                                    <Accordion type="single" collapsible style={{ border: 'none' }}>
+                                        <AccordionItem value="item-1">
+                                            <AccordionTrigger className={classes.AccordionTrigger}>Haircuts</AccordionTrigger>
+                                            <AccordionContent>
+                                                <Table>
+                                                    <TableBody>
+                                                        <TableRow>
+                                                            <TableCell className="font-medium">Children</TableCell>
+                                                            <TableCell className="text-right">$20</TableCell>
+                                                        </TableRow>
+                                                        <TableRow>
+                                                            <TableCell className="font-medium">Lineup</TableCell>
+                                                            <TableCell className="text-right">$20</TableCell>
+                                                        </TableRow>
+                                                        <TableRow>
+                                                            <TableCell className="font-medium">Fade</TableCell>
+                                                            <TableCell className="text-right">$40</TableCell>
+                                                        </TableRow>
+                                                        <TableRow>
+                                                            <TableCell className="font-medium">Fade + Beard</TableCell>
+                                                            <TableCell className="text-right">$60</TableCell>
+                                                        </TableRow>
+                                                    </TableBody>
+                                                </Table>
+                                            </AccordionContent>
+                                        </AccordionItem>
+                                    </Accordion>
+                                </TableCell>
+                            </TableRow>
                         </TableBody>
                     </Table>
-                </Stack>       
-            </CardBody>            
-            <CardFooter>
-                <Button variant="default" asChild>
-                    <a href="/appointments">Book appointment</a>
-                </Button>             
-            </CardFooter>
-        </Card>
-        </SimpleGrid>
+        </div>
     </div>
   )
 }

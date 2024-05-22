@@ -1,0 +1,51 @@
+.collage {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      "left middle middle"
+      "left middle middle"
+      "right middle middle";
+    gap: 10px; /* Gutter space between the images */
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .collage_item {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 100%; /* Maintain square aspect ratio */
+  }
+  
+  .item1 {
+    grid-area: left;
+    padding-bottom: 100%; /* Maintain square aspect ratio */
+  }
+  
+  .item2 {
+    grid-area: middle;
+    padding-bottom: 50%; /* Half height */
+  }
+  
+  .item3 {
+    grid-area: middle;
+    padding-bottom: 50%; /* Half height */
+  }
+  
+  .item4 {
+    grid-area: right;
+    padding-bottom: 100%; /* Maintain square aspect ratio */
+  }
+  
+  .collage_image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  

@@ -6,7 +6,6 @@ import { Button } from '../ui/button';
 import { useToast } from '@chakra-ui/react';
 import '../../axiosConfig';
 
-
 export default function Booking() {
     const [formData, setFormData] = useState({
         firstName: '',
@@ -30,23 +29,25 @@ export default function Booking() {
 
     // Sets the date and fetches available time slots for that date
     const setDate = (newDate) => {
-        setSelectedDate(newDate);
-        setFormData({ ...formData, date: newDate.toISOString().split('T')[0] });
-        fetchTimeSlots(newDate);
+        const isoDate = newDate.toISOString().split('T')[0];
+        setSelectedDate(newDate); // Set the new date first
+        setFormData({ ...formData, date: isoDate }); // Update formData with the new date
+        fetchTimeSlots(newDate); // Then fetch new time slots
     };
 
-    // Update selectedDate when formData.date changes
+    // This effect ensures that any time `selectedDate` changes, the component reacts appropriately
     useEffect(() => {
-        if (formData.date) {
-            setSelectedDate(new Date(formData.date));
+        if (selectedDate) {
+            const isoDate = selectedDate.toISOString().split('T')[0];
+            fetchTimeSlots(selectedDate); // Ensures fetching time slots if date changes outside setDate function
         }
-    }, [formData.date]);
+    }, [selectedDate]);
 
     // Fetches time slots for a selected date
     const fetchTimeSlots = async (date) => {
         try {
             const formattedDate = date.toISOString().split('T')[0];
-            const response = await axios.get(`api/bookings/date/${formattedDate}/time-slots`);
+            const response = await axios.get(`http://localhost:5000/api/bookings/date/${formattedDate}/time-slots`);
             console.log("Time Slots Received:", response.data);
             setTimeSlots(response.data);
         } catch (error) {
@@ -70,7 +71,7 @@ export default function Booking() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('api/bookings', formData);
+            await axios.post('http://localhost:5000/api/bookings', formData);
             resetFormData();
             toast({
                 title: 'Booking Successful',
@@ -92,7 +93,6 @@ export default function Booking() {
             });
         }
     };
-    
 
     // Resets form data after submission or on error
     const resetFormData = () => {
@@ -141,7 +141,7 @@ export default function Booking() {
                     <div className={classes.formGrp}>
                         <label>Service:</label>
                         <div>
-                            {['Haircut', 'Coloring', 'Extensions'].map(service => (
+                            {['Twists/Braids', 'Locs Retwist', 'Extensions', 'Haircuts(Male)'].map(service => (
                                 <Button className={classes.button}
                                     key={service}
                                     type="button"
@@ -167,18 +167,20 @@ export default function Booking() {
                 {/* Date and time selection */}
                 <div className={classes.dateGrp}>
                     <div className={classes.calendar}>
-                        <Calendar
-                            type="date"
-                            name="date"
-                            id="date"
-                            required
-                            value={formData.date}
-                            onChange={handleInputChange}
-                            mode="single"
-                            selected={selectedDate}
-                            onSelect={setDate}
-                            className="rounded-md border shadow"
-                        />
+                    <Calendar
+                        key={selectedDate} // Changing key forces re-render
+                        type="date"
+                        name="date"
+                        id="date"
+                        required
+                        value={formData.date}
+                        onChange={handleInputChange}
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setDate}
+                        className="rounded-md border shadow"
+                    />
+
                     </div>
                     
                     <div className={classes.time}>                        
@@ -202,7 +204,7 @@ export default function Booking() {
                                     {slot.time}
                                 </Button>
                             ))}
-                                                </div>
+                        </div>
                     </div>
                     
                     <div className={classes.submitBtn}>
@@ -213,4 +215,3 @@ export default function Booking() {
         </div>
     );
 }
-

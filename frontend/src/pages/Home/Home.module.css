@@ -1,96 +1,62 @@
-/* Home.module.css */
-
-/* Hero section */
 .hero {
-  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  color: black;
+  min-height: 100vh;
+  padding: 20px;
+  color: white; /* Change text color to white */
 }
 
 .hero_content {
-  max-width: 800px;
+  display: flex;
+  flex-direction: column; /* Stack text and image content vertically */
+  max-width: 1200px; /* Adjust width as necessary */
+  width: 100%;
+  align-items: center;
+  justify-content: center; /* Center the content */
+  text-align: center; /* Center text alignment */
 }
 
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 20px;
+.text_content {
+  padding: 20px; /* Provide some padding around the text */
+  color: azure;
 }
 
-.hero p {
-  font-size: 1.5rem;
-  margin-bottom: 40px;
+.text_content h1 {
+  font-size: 3rem; /* Adjust font size for smaller screens */
 }
 
-.hero_button {
-  padding: 15px 30px;  
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
+/* Responsive styling for larger screens */
+@media (min-width: 1024px) {
+  .text_content h1 {
+    font-size: 5rem; /* Larger font size for larger screens */
+  }
 }
 
-.hero_button:hover {
-  background-color: #F5CF6B;
+.image_content {
+  display: flex;
+  justify-content: center; /* Center the image horizontally */
+  margin-top: 20px; /* Add some margin to separate from text content */
 }
 
-/* Other sections */
-.about_section,
-.gallery_section,
-.testimonials_section,
-.contact_section {
-  padding: 80px 0;
-}
-
-.about_content,
-.gallery_content,
-.testimonials_content,
-.contact_content {
-  max-width: 1200px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.about_content h2,
-.gallery_content h2,
-.testimonials_content h2,
-.contact_content h2 {
-  font-size: 2rem;
-  margin-bottom: 30px;
-}
-
-.about_content p,
-.gallery_content p,
-.testimonials_content p,
-.contact_content p {
-  font-size: 1.2rem;
-  margin-bottom: 40px;
-}
-
-.learn_more_button,
-.view_gallery_button,
-.view_testimonials_button,
-.contact_button {
-  padding: 12px 24px;
-  background-color: #CBB74B;
-  color: white;
-  text-decoration: none;
+.image_content img {
+  width: 100%; /* Adjust based on your preference */
+  max-width: 400px; /* Keeps images from being too large */
+  height: auto;
   border-radius: 5px;
-  transition: background-color 0.3s ease;
-  font-weight: bold;
 }
 
-.learn_more_button:hover,
-.view_gallery_button:hover,
-.view_testimonials_button:hover,
-.contact_button:hover {
-  background-color: #F5CF6B;
+.buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center; /* Center the buttons */
 }
 
-.footer {
-  background-color: #333;
-  color: white;
-  text-align: center;
-  padding: 20px 0;
+.buttons a {
+  text-decoration: none;
+  color: white; /* Keep button text color white */
+}
+
+.buttons Button {
+  margin-right: 10px;
 }

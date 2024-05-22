@@ -6,7 +6,6 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: black;
   }
   
   .hero_content {
@@ -14,12 +13,10 @@
   }
   
   .hero h1 {
-    font-size: 3rem;
     margin-bottom: 20px;
   }
   
   .hero p {
-    font-size: 1.5rem;
     margin-bottom: 40px;
   }
   

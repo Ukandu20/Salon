@@ -2,9 +2,16 @@
     margin: 0 100px;
     justify-content: center;
     margin-bottom: 150px;
-    display: flex;
 }
 
 .card {
     background-color: azure;
+}
+
+.Tables {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 40px;
+    border: 5px;
 }
