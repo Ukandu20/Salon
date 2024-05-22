@@ -17,6 +17,13 @@ nav {
   z-index: 1000;
 }
 
+/* Hamburger icon */
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
 /* Style the list items */
 nav ul li {
   display: inline-block;
@@ -27,10 +34,17 @@ nav ul li {
 nav ul li a {
   display: inline-block;
   padding: 15px 20px;
-  color: black;
+  color: white;
   text-decoration: none;
   transition: color 0.3s, transform 0.3s ease-in-out; /* Updated to include transform transition */
-  font-size: 1.2rem;
+  font-size: 1rem; /* Adjust font size for smaller screens */
+}
+
+/* Responsive styling for larger screens */
+@media (min-width: 1024px) {
+  nav ul li a {
+    font-size: 1.2rem; /* Larger font size for larger screens */
+  }
 }
 
 /* Change nav_link styles on hover */
@@ -40,11 +54,43 @@ nav ul li a {
 
 /* Active link styles */
 .nav_links a.active {
-  color: #CBB74B; /* Gold color for active links */
-  background-color: #333; /* Dark background for contrast */
-  text-decoration: underline;
-  font-size: 1.5rem; /* Larger font size */
-  font-weight: bold; /* Make the font weight bold */
+  font-size: 1.1rem; /* Adjust font size for smaller screens */
   border-radius: 4px; /* Rounded corners for aesthetic */
 }
 
+/* Responsive styling for active link on larger screens */
+@media (min-width: 1024px) {
+  .nav_links a.active {
+    font-size: 1.5rem; /* Larger font size for larger screens */
+  }
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .nav_links {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--background);
+    z-index: 1000;
+  }
+
+  .nav_links.showMenu {
+    display: flex;
+  }
+
+  nav ul li {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+  }
+}
