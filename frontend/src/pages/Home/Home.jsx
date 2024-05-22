@@ -2,7 +2,6 @@ import React from 'react';
 import classes from './Home.module.css'; // Your CSS module for home page styles
 import { Button } from '../../components/ui/button';
 import { ReloadIcon } from '@radix-ui/react-icons';
-import Disclaimer from '@/components/Disclaimer/Disclaimer';
 import CollageComponent from '@/components/Collage/Collage'; // Import the CollageComponent
 import { LampContainer } from '../../components/ui/lamp'; // Adjust the import path according to your project structure
 
