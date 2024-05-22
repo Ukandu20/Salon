@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import classes from './Gallery.module.css';
-import Disclaimer from '@/components/Disclaimer/Disclaimer';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { RocketIcon } from "@radix-ui/react-icons";
 import { Card, CardBody, CardFooter, Image, Stack, Heading, Text, SimpleGrid } from '@chakra-ui/react';
@@ -25,7 +24,6 @@ export default function Gallery() {
 
     return (
         <div>
-            <Disclaimer/>
             
             {showAlert && (
                 <div className={classes.alertContainer}>
