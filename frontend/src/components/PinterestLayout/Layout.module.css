@@ -1,0 +1,11 @@
+.pinContainer {
+    margin: 0 10px;
+    padding: 0;
+    width: 90%;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%);
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    grid-auto-rows: 10px;
+}
