@@ -11,7 +11,7 @@ export default function Footer() {
           <a href="/faq" className={classes.footerLink}>FAQ</a>
         </div>
         <div className={classes.contactSection}>
-          <h2>Contact Us</h2>
+          <h5>Contact Us</h5>
           <a href='/contact' className={classes.footerLink}>123-456-7890</a>
           <a href="/contact" className={classes.footerLink}>hairhaven@gmail.com</a>
         </div>
