@@ -20,7 +20,21 @@ export default function Booking() {
     const [selectedDate, setSelectedDate] = useState(null);
     const [timeSlots, setTimeSlots] = useState([]);
     const [selectedTime, setSelectedTime] = useState('');
+    const [fullyBookedDates, setFullyBookedDates] = useState([]);
     const toast = useToast();
+
+    useEffect(() => {
+        fetchFullyBookedDates();
+    }, []);
+
+    const fetchFullyBookedDates = async () => {
+        try {
+            const response = await axios.get(`/api/bookings/fully-booked-dates`);
+            setFullyBookedDates(response.data);
+        } catch (error) {
+            console.error('Failed to fetch fully booked dates:', error);
+        }
+    };
 
     // Handles input changes for form fields
     const handleInputChange = (e) => {
@@ -30,26 +44,18 @@ export default function Booking() {
     // Sets the date and fetches available time slots for that date
     const setDate = (newDate) => {
         const isoDate = newDate.toISOString().split('T')[0];
-        setSelectedDate(newDate); // Set the new date first
-        setFormData({ ...formData, date: isoDate }); // Update formData with the new date
-        fetchTimeSlots(newDate); // Then fetch new time slots
+        setSelectedDate(newDate);
+        setFormData({ ...formData, date: isoDate });
+        fetchTimeSlots(newDate);
     };
-
-    // This effect ensures that any time `selectedDate` changes, the component reacts appropriately
-    useEffect(() => {
-        if (selectedDate) {
-            const isoDate = selectedDate.toISOString().split('T')[0];
-            fetchTimeSlots(selectedDate); // Ensures fetching time slots if date changes outside setDate function
-        }
-    }, [selectedDate]);
 
     // Fetches time slots for a selected date
     const fetchTimeSlots = async (date) => {
         try {
             const formattedDate = date.toISOString().split('T')[0];
-            const response = await axios.get(`api/bookings/date/${formattedDate}/time-slots`);
-            console.log("Time Slots Received:", response.data);
-            setTimeSlots(response.data);
+            const response = await axios.get(`/api/bookings/date/${formattedDate}/time-slots`);
+            const availableSlots = response.data.filter(slot => slot.available); // Filter out booked slots
+            setTimeSlots(availableSlots);
         } catch (error) {
             console.error('Failed to fetch time slots:', error);
             setTimeSlots([]);
@@ -71,7 +77,7 @@ export default function Booking() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('api/bookings', formData);
+            await axios.post('/api/bookings', formData);
             resetFormData();
             toast({
                 title: 'Booking Successful',
@@ -81,6 +87,7 @@ export default function Booking() {
                 duration: 5000,
                 isClosable: true,
             });
+            fetchTimeSlots(selectedDate); // Refresh time slots after successful booking
         } catch (error) {
             console.error('Error:', error);
             toast({
@@ -108,6 +115,13 @@ export default function Booking() {
         setSelectedDate(null);
         setSelectedTime('');
         setTimeSlots([]);
+    };
+
+    // Disable past dates and fully booked dates
+    const isDateDisabled = (date) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return date < today || fullyBookedDates.includes(date.toISOString().split('T')[0]);
     };
 
     return (
@@ -168,37 +182,39 @@ export default function Booking() {
                 <div className={classes.dateGrp}>
                     <div className={classes.calendar}>
                     <Calendar
-                        key={selectedDate} // Changing key forces re-render
+                        key={selectedDate ? selectedDate.toISOString() : 'default'}
                         type="date"
                         name="date"
                         id="date"
                         required
                         value={formData.date}
-                        onChange={handleInputChange}
+                        onChange={(date) => setDate(new Date(date))} // Ensure date is set correctly
                         mode="single"
                         selected={selectedDate}
                         onSelect={setDate}
+                        disabled={isDateDisabled}
                         className="rounded-md border shadow"
                     />
-
                     </div>
                     
-                    <div className={classes.time}>                        
+                    <div className={classes.time}>
+                        {timeSlots.length === 0 && selectedDate && !isDateDisabled(selectedDate) && (
+                            <p className={classes.fullyBookedMessage}>Sorry we are fully booked for today</p>
+                        )}
                         <div>
                             {timeSlots.map(slot => (
                                 <Button
                                     key={slot.time}
                                     type="button"
-                                    onClick={() => slot.available && handleTimeSelection(slot.time)}
-                                    disabled={!slot.available}
+                                    onClick={() => handleTimeSelection(slot.time)}
                                     style={{
-                                        backgroundColor: slot.time === selectedTime && slot.available ? '#CBB74B' : slot.available ? '#007A76' : 'rose',
+                                        backgroundColor: slot.time === selectedTime ? '#CBB74B' : '#007A76',
                                         color: 'white',
                                         margin: '5px',
                                         padding: '10px 20px',
                                         border: 'none',
                                         borderRadius: '5px',
-                                        cursor: slot.available ? 'pointer' : 'not-allowed'
+                                        cursor: 'pointer'
                                     }}
                                 >
                                     {slot.time}
