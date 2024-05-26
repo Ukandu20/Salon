@@ -197,10 +197,7 @@ export default function Booking() {
                     />
                     </div>
                     
-                    <div className={classes.time}>
-                        {timeSlots.length === 0 && selectedDate && !isDateDisabled(selectedDate) && (
-                            <p className={classes.fullyBookedMessage}>Sorry we are fully booked for today</p>
-                        )}
+                    <div className={classes.time}>                        
                         <div>
                             {timeSlots.map(slot => (
                                 <Button

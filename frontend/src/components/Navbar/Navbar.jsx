@@ -20,12 +20,12 @@ export default function Navbar() {
                 {/* Navigation links */}
                 <ul className={`${classes.nav_links} ${isMenuOpen ? classes.showMenu : ''}`}>
                     <li>
-                        <a href='/' className={window.location.pathname === '/' ? classes.active : ''}>
+                        <a href='/'  className={window.location.pathname === '/' ? classes.active : ''}>
                             Home
                         </a>
                     </li>
                     <li>
-                        <a href='/Services' className={window.location.pathname === '/Services' ? classes.active : ''}>
+                        <a href='/Services'  className={window.location.pathname === '/Services' ? classes.active : ''}>
                             Services
                         </a>
                     </li>
