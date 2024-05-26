@@ -1,0 +1,100 @@
+.wrapper {
+    display: flex;
+  }
+  
+  .sidebar {
+    margin-top: 220px;
+    width: 50px;
+    min-height: 300px;
+    background-color: azure;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0; /* Adjust padding for top and bottom */
+    transition: width 0.3s;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  .sidebar:hover {
+    width: 200px;
+  }
+  
+  .sidebar_links {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center content horizontally */
+    justify-content: center; /* Center content vertically */
+  }
+  
+  .sidebar_links li {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .sidebar_links li button {
+    background: none;
+    border: none;
+    text-decoration: none;
+    color: black;
+    padding: 0.5rem 0.5rem;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .sidebar_links li button .linkText {
+    display: none;
+  }
+  
+  .sidebar:hover .sidebar_links li button .linkText {
+    display: inline;
+  }
+  
+  .sidebar_links li button.active {
+    color: crimson;
+  }
+  
+  .hamburgerMenu {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1000; /* Ensure the hamburger menu is on top */
+  }
+  
+  .content {
+    margin: 50px 50px;
+    padding: 1rem;
+    transition: margin-left 0.3s;
+    width: calc(100% - 50px); /* Adjust content width */
+  }
+  
+  .sidebar:hover .content {
+    margin-left: 200px;
+    width: calc(100% - 200px); /* Adjust content width */
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar {
+      display: none; /* Hide sidebar on smaller screens */
+    }
+    .hamburgerMenu {
+      display: block; /* Show hamburger menu on smaller screens */
+    }
+    .content {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+  

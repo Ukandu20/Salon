@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import bookingRouter from './booking.router.js';
 
 const router = Router();
 
@@ -20,9 +21,14 @@ router.get('/', (req, res) => {
       { method: "GET", path: "/api/bookings/date/:date", description: "Retrieve bookings by date" },
       { method: "GET", path: "/api/bookings/date/:date/time-slots", description: "Retrieve available time slots for a specific date" },
       { method: "DELETE", path: "/api/bookings/id/:id", description: "Delete a specific booking by ID" },
-      { method: "DELETE", path: "/api/bookings/all", description: "Delete all bookings" }
+      { method: "DELETE", path: "/api/bookings/all", description: "Delete all bookings" },
+      { method: "GET", path: "/api/bookings/count-users", description: "Retrieve the count of total users" },
+      { method: "GET", path: "/api/bookings/count-unique-users", description: "Retrieve the count of unique users" }
     ]
   });
 });
+
+// Use the booking router for all /api/bookings routes
+router.use('/api/bookings', bookingRouter);
 
 export default router;

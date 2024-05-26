@@ -1,0 +1,41 @@
+.sidebar {
+    margin-top: 150px;
+    width: 200px;
+    height: 60vh;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    transition: width 0.3s;
+    justify-content: start;
+    align-items: center; /* Center content horizontally */
+    position: fixed;
+  }
+  
+  .sidebar.collapsed {
+    width: 50px;
+  }
+  
+  .collapseButtonContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .sidebar_links {
+    margin-top: 300px;
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    align-items: center; /* Center content horizontally */
+    justify-content: center;
+  }
+  
+  .sidebar_links li {
+    margin: auto;
+    width: 100%;
+    display: flex;
+    justify-content: left;
+  }

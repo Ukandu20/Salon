@@ -18,10 +18,8 @@ nav {
 }
 
 /* Hamburger icon */
-.hamburger {
+.hamburgerMenu {
   display: none;
-  font-size: 2rem;
-  cursor: pointer;
 }
 
 /* Style the list items */
@@ -43,7 +41,7 @@ nav ul li a {
 /* Responsive styling for larger screens */
 @media (min-width: 1024px) {
   nav ul li a {
-    font-size: 1.2rem; /* Larger font size for larger screens */
+    font-size: 1rem; /* Larger font size for larger screens */
   }
 }
 
@@ -56,31 +54,29 @@ nav ul li a {
 .nav_links a.active {
   font-size: 1.1rem; /* Adjust font size for smaller screens */
   border-radius: 4px; /* Rounded corners for aesthetic */
+  color: #e21d48; /* Use primary color for active link */
 }
 
 /* Responsive styling for active link on larger screens */
 @media (min-width: 1024px) {
   .nav_links a.active {
-    font-size: 1.5rem; /* Larger font size for larger screens */
+    color: #e21d48; /* Use primary color for active link */
   }
 }
 
 /* Responsive styling for smaller screens */
 @media (max-width: 768px) {
-  .hamburger {
+  nav {
+    padding: 1rem; 
+    
+  }
+
+  .hamburgerMenu {
     display: block;
   }
 
   .nav_links {
     display: none;
-    flex-direction: column;
-    align-items: center;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: var(--background);
-    z-index: 1000;
   }
 
   .nav_links.showMenu {
@@ -93,4 +89,9 @@ nav ul li a {
     text-align: center;
     padding: 10px 0;
   }
+}
+
+/* Menu item styles */
+.menuItem {
+  color: #e21d48 !important;
 }

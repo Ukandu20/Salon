@@ -4,6 +4,8 @@ import Home from './pages/Home/Home';
 import Services from './pages/Services/Services';
 import Appointments from './pages/Appointments/Appointments';
 import Gallery from './pages/Gallery/Gallery';
+import Admin from './pages/Admin/Admin';
+
 
 
 
@@ -14,6 +16,7 @@ export default function Approutes() {
         <Route path='/services' element={<Services />} />
         <Route path="/Gallery" element={<Gallery />} />
         <Route path='/appointments' element={<Appointments />} />
+        <Route path='/admin' element={<Admin />} />
     </Routes>
   )
 }

@@ -90,7 +90,7 @@ export default function CardComponent() {  // Renamed to avoid conflict with HTM
 
         <div className={classes.Tables}>
         <Table>
-                        <TableCaption >Price List.</TableCaption>
+                        <TableCaption >Price List</TableCaption>
                         <TableHeader>
                             <TableRow>
                             <TableHead className="w-[100px]">Style</TableHead>

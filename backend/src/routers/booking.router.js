@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Booking } from '../assets/data/Booking.js'; // Correct path to import Booking model
+import { Booking } from '../assets/data/Booking.js';
 import mongoose from 'mongoose';
 
 const bookingRouter = Router();
@@ -92,5 +92,69 @@ bookingRouter.delete('/all', async (req, res) => {
     res.status(500).json({ message: 'Error deleting all bookings', error: err.message });
   }
 });
+
+// Get the count of bookings for a specific month
+bookingRouter.get('/count/:year/:month', async (req, res) => {
+  try {
+    const { year, month } = req.params;
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+
+    const count = await Booking.countDocuments({ date: { $gte: startDate, $lte: endDate } });
+    res.json({ count });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching booking count', error: err.message });
+  }
+});
+
+// Get the count of total users (based on email)
+bookingRouter.get('/count-users', async (req, res) => {
+  try {
+    const userCount = await Booking.countDocuments();
+    res.json({ count: userCount });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching user count', error: err.message });
+  }
+});
+
+// Get the count of total users for a specific month
+bookingRouter.get('/count-users/:year/:month', async (req, res) => {
+  const { year, month } = req.params;
+  try {
+    const start = new Date(year, month - 1, 1);
+    const end = new Date(year, month, 1);
+    const userCount = await Booking.find({ date: { $gte: start, $lt: end } }).countDocuments();
+    res.json({ count: userCount });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching user count', error: err.message });
+  }
+});
+
+// Get the count of unique users (based on email)
+bookingRouter.get('/count-unique-users', async (req, res) => {
+  try {
+    const uniqueUsers = await Booking.distinct('email');
+    const uniqueUserCount = uniqueUsers.length;
+    res.json({ count: uniqueUserCount });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching unique user count', error: err.message });
+  }
+});
+
+// Get the count of unique users for a specific month
+bookingRouter.get('/count-unique-users/:year/:month', async (req, res) => {
+  const { year, month } = req.params;
+  try {
+    const start = new Date(year, month - 1, 1);
+    const end = new Date(year, month, 1);
+    const uniqueUsers = await Booking.find({ date: { $gte: start, $lt: end } }).distinct('email');
+    const uniqueUserCount = uniqueUsers.length;
+    res.json({ count: uniqueUserCount });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching unique user count', error: err.message });
+  }
+});
+
+
 
 export default bookingRouter;

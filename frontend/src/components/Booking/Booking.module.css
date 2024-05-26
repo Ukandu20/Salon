@@ -9,7 +9,6 @@
     margin-bottom: 100px;
     padding: 20px;    
     width: 80%; /* Adjusted for better spacing */
-
 }
 
 .heading {
@@ -34,8 +33,6 @@ form {
     width: 100%; /* Full width to utilize space */
     flex-wrap: wrap; /* Wraps children to next line on small screens */
 }
-
-
 
 .infoGrp, .dateGrp {
     display: flex;
@@ -62,8 +59,17 @@ select {
     padding: 10px;
     border-bottom: 3px solid #000000;
     border-radius: 5px;
-    width: 100%; /* Ensure input takes the full width */
-    
+    width: 100%; 
+    color: #000000; /* Text color when user is typing */
+    background-color: white; /* Background color of input */
+}
+
+input::placeholder {
+    color: #AAAAAA; /* Placeholder text color */
+}
+
+.calendar {
+    padding: 0; /* Remove excess padding */
 }
 
 .submitBtn {
@@ -72,15 +78,7 @@ select {
     text-align: center;
 }
 
-
 .button {
     align-items: center;
 }
 
-
-
-.fullyBookedMessage {
-    color: red;
-    font-size: 1.2em;
-    margin: 10px 0;
-}
