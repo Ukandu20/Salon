@@ -4,6 +4,15 @@ import classes from './Booking.module.css'; // Your CSS module for Booking page 
 import { Calendar } from '../ui/calendar';
 import { Button } from '../ui/button';
 import { useToast } from '@chakra-ui/react';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import '../../axiosConfig';
 
 export default function Booking() {
@@ -36,12 +45,10 @@ export default function Booking() {
         }
     };
 
-    // Handles input changes for form fields
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // Sets the date and fetches available time slots for that date
     const setDate = (newDate) => {
         const isoDate = newDate.toISOString().split('T')[0];
         setSelectedDate(newDate);
@@ -49,12 +56,11 @@ export default function Booking() {
         fetchTimeSlots(newDate);
     };
 
-    // Fetches time slots for a selected date
     const fetchTimeSlots = async (date) => {
         try {
             const formattedDate = date.toISOString().split('T')[0];
             const response = await axios.get(`/api/bookings/date/${formattedDate}/time-slots`);
-            const availableSlots = response.data.filter(slot => slot.available); // Filter out booked slots
+            const availableSlots = response.data.filter(slot => slot.available);
             setTimeSlots(availableSlots);
         } catch (error) {
             console.error('Failed to fetch time slots:', error);
@@ -62,18 +68,15 @@ export default function Booking() {
         }
     };
 
-    // Handles selection of a time slot
     const handleTimeSelection = (time) => {
         setFormData({ ...formData, time });
         setSelectedTime(time);
     };
 
-    // Handles service selection
     const handleServiceSelection = (service) => {
         setFormData({ ...formData, service });
     };
 
-    // Submits the booking form
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -87,7 +90,7 @@ export default function Booking() {
                 duration: 5000,
                 isClosable: true,
             });
-            fetchTimeSlots(selectedDate); // Refresh time slots after successful booking
+            fetchTimeSlots(selectedDate);
         } catch (error) {
             console.error('Error:', error);
             toast({
@@ -101,7 +104,6 @@ export default function Booking() {
         }
     };
 
-    // Resets form data after submission or on error
     const resetFormData = () => {
         setFormData({
             firstName: '',
@@ -117,7 +119,6 @@ export default function Booking() {
         setTimeSlots([]);
     };
 
-    // Disable past dates and fully booked dates
     const isDateDisabled = (date) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -132,92 +133,74 @@ export default function Booking() {
             </section>
             
             <form onSubmit={handleSubmit} className={classes.form}>
-                {/* Form groups for input */}
                 <div className={classes.infoGrp}>
-                    {/* Name, phone, and email inputs */}
                     <div className={classes.formGrp}>
                         <input type="text" name="firstName" id="firstName" required placeholder='First Name' value={formData.firstName} onChange={handleInputChange} />
                     </div>
-
                     <div className={classes.formGrp}>
                         <input type="text" name="lastName" id="lastName" required placeholder='Last Name' value={formData.lastName} onChange={handleInputChange} />
                     </div>
-
                     <div className={classes.formGrp}>
                         <input type="tel" name="phoneNumber" id="phoneNumber" required placeholder='Enter Phone Number' value={formData.phoneNumber} onChange={handleInputChange}/>
                     </div>
-
                     <div className={classes.formGrp}>
                         <input type="email" name="email" id="email" required placeholder='Enter Email Address' value={formData.email} onChange={handleInputChange}/>
                     </div>
 
-                    {/* Service selection */}
                     <div className={classes.formGrp}>
-                        <label>Service:</label>
-                        <div>
-                            {['Twists/Braids', 'Locs Retwist', 'Extensions', 'Haircuts(Male)'].map(service => (
-                                <Button className={classes.button}
-                                    key={service}
-                                    type="button"
-                                    onClick={() => handleServiceSelection(service)}
-                                    style={{
-                                        backgroundColor: formData.service === service ?  '#CBB74B' : '#007A76', // Active service has a different color
-                                        color: 'white',
-                                        margin: '5px',
-                                        padding: '10px 20px',
-                                        border: 'none',
-                                        justifyContent: 'center',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {service}
-                                </Button>
-                            ))}
-                        </div>
+                        <Select onValueChange={handleServiceSelection} value={formData.service}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a service" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="Twists/Braids">Twists/Braids</SelectItem>
+                                    <SelectItem value="Locs Retwist">Locs Retwist</SelectItem>
+                                    <SelectItem value="Extensions">Extensions</SelectItem>
+                                    <SelectItem value="Haircuts(Male)">Haircuts(Male)</SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
                 
-                {/* Date and time selection */}
                 <div className={classes.dateGrp}>
-                    <div className={classes.calendar}>
-                    <Calendar
-                        key={selectedDate ? selectedDate.toISOString() : 'default'}
-                        type="date"
-                        name="date"
-                        id="date"
-                        required
-                        value={formData.date}
-                        onChange={(date) => setDate(new Date(date))} // Ensure date is set correctly
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={setDate}
-                        disabled={isDateDisabled}
-                        className="rounded-md border shadow"
-                    />
+                    <div>
+                        <Calendar
+                            key={selectedDate ? selectedDate.toISOString() : 'default'}
+                            type="date"
+                            name="date"
+                            id="date"
+                            required
+                            value={formData.date}
+                            onChange={(date) => setDate(new Date(date))}
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={setDate}
+                            disabled={isDateDisabled}
+                            className="rounded-md border shadow"
+                        />
                     </div>
                     
-                    <div className={classes.time}>                        
-                        <div>
-                            {timeSlots.map(slot => (
-                                <Button
-                                    key={slot.time}
-                                    type="button"
-                                    onClick={() => handleTimeSelection(slot.time)}
-                                    style={{
-                                        backgroundColor: slot.time === selectedTime ? '#CBB74B' : '#007A76',
-                                        color: 'white',
-                                        margin: '5px',
-                                        padding: '10px 20px',
-                                        border: 'none',
-                                        borderRadius: '5px',
-                                        cursor: 'pointer'
-                                    }}
-                                >
-                                    {slot.time}
-                                </Button>
-                            ))}
-                        </div>
+                    <div className={classes.formGrp}>
+                        <Select onValueChange={handleTimeSelection} value={formData.time}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select a time slot" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    {timeSlots.length > 0 ? (
+                                        timeSlots.map(slot => (
+                                            <SelectItem key={slot.time} value={slot.time}>{slot.time}</SelectItem>
+                                        ))
+                                    ) : (
+                                        <SelectItem disabled>
+                                            There are no available slots for today
+                                        </SelectItem>
+                                    )}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
                     
                     <div className={classes.submitBtn}>

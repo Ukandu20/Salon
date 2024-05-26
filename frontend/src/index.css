@@ -11,50 +11,50 @@
 @layer base {
   :root {
     /* Light theme variables */
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 346.8 77.2% 49.8%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 346.8 77.2% 49.8%;
-    --radius: 0.5rem;
-  }
+    --background: 0 0% 100%; /* White */
+    --foreground: 240 10% 3.9%; /* Very dark desaturated blue */
+    --card: 0 0% 100%; /* White */
+    --card-foreground: 240 10% 3.9%; /* Very dark desaturated blue */
+    --popover: 0 0% 100%; /* White */
+    --popover-foreground: 240 10% 3.9%; /* Very dark desaturated blue */
+    --primary: 346.8 77.2% 49.8%; /* Vivid red (similar to crimson) */
+    --primary-foreground: 355.7 100% 97.3%; /* Very light pink */
+    --secondary: 240 4.8% 95.9%; /* Very light grayish blue */
+    --secondary-foreground: 240 5.9% 10%; /* Very dark grayish blue */
+    --muted: 240 4.8% 95.9%; /* Very light grayish blue */
+    --muted-foreground: 240 3.8% 46.1%; /* Dark grayish blue */
+    --accent: 240 4.8% 95.9%; /* Very light grayish blue */
+    --accent-foreground: 240 5.9% 10%; /* Very dark grayish blue */
+    --destructive: 0 84.2% 60.2%; /* Bright red */
+    --destructive-foreground: 0 0% 98%; /* Very light gray (almost white) */
+    --border: 240 5.9% 90%; /* Light grayish blue */
+    --input: 240 5.9% 90%; /* Light grayish blue */
+    --ring: 346.8 77.2% 49.8%; /* Vivid red (similar to crimson) */
+    --radius: 0.5rem; /* Border radius value (not a color) */
+}
 
-  .dark {
+.dark {
     /* Dark theme variables */
-    --background: 225 84% 5%;
-    --foreground: 0 0% 95%;
-    --card: 24 9.8% 10%;
-    --card-foreground: 0 0% 95%;
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 95%;
-    --primary: 346.8 77.2% 49.8%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 12 6.5% 15.1%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 346.8 77.2% 49.8%;
-  }
+    --background: 225 84% 5%; /* Very dark blue */
+    --foreground: 0 0% 95%; /* Very light gray (almost white) */
+    --card: 24 9.8% 10%; /* Very dark desaturated orange */
+    --card-foreground: 0 0% 95%; /* Very light gray (almost white) */
+    --popover: 0 0% 9%; /* Very dark gray (almost black) */
+    --popover-foreground: 0 0% 95%; /* Very light gray (almost white) */
+    --primary: 346.8 77.2% 49.8%; /* Vivid red (similar to crimson) */
+    --primary-foreground: 355.7 100% 97.3%; /* Very light pink */
+    --secondary: 240 3.7% 15.9%; /* Very dark grayish blue */
+    --secondary-foreground: 0 0% 98%; /* Very light gray (almost white) */
+    --muted: 0 0% 15%; /* Very dark gray */
+    --muted-foreground: 240 5% 64.9%; /* Light grayish blue */
+    --accent: 12 6.5% 15.1%; /* Very dark desaturated orange */
+    --accent-foreground: 0 0% 98%; /* Very light gray (almost white) */
+    --destructive: 0 62.8% 30.6%; /* Dark red */
+    --destructive-foreground: 0 85.7% 97.3%; /* Very light pink */
+    --border: 240 3.7% 15.9%; /* Very dark grayish blue */
+    --input: 240 3.7% 15.9%; /* Very dark grayish blue */
+    --ring: 346.8 77.2% 49.8%; /* Vivid red (similar to crimson) */
+}
 }
 
 /* Apply global styles */
@@ -72,37 +72,31 @@
 
   /* Style headers (h1 to h6) with font sizes and margins */
   h1 {
-    font-family: 'Imprima', sans-serif;
     color: var(--foreground);
     @apply text-4xl lg:text-5xl; /* Responsive font size for h1 */
     @apply mb-4; /* Margin below h1 */
   }
   h2 {
-    font-family: 'Imprima', sans-serif;
     color: var(--foreground);
     @apply text-3xl lg:text-4xl; /* Responsive font size for h2 */
     @apply mb-3; /* Margin below h2 */
   }
   h3 {
-    font-family: 'Imprima', sans-serif;
     color: var(--foreground);
     @apply text-2xl lg:text-3xl; /* Responsive font size for h3 */
     @apply mb-2; /* Margin below h3 */
   }
   h4 {
-    font-family: 'Imprima', sans-serif;
     color: var(--foreground);
     @apply text-xl lg:text-2xl; /* Responsive font size for h4 */
     @apply mb-2; /* Margin below h4 */
   }
   h5 {
-    font-family: 'Imprima', sans-serif;
     color: var(--foreground);
     @apply text-lg lg:text-xl; /* Responsive font size for h5 */
     @apply mb-2; /* Margin below h5 */
   }
   h6 {
-    font-family: 'Imprima', sans-serif;
     color: var(--foreground);
     @apply text-base lg:text-lg; /* Responsive font size for h6 */
     @apply mb-2; /* Margin below h6 */
@@ -116,41 +110,11 @@
 
   /* Style paragraph tags */
   p {
-    color: var(--foreground);
+    color: var(--primary-foreground);
     @apply text-base lg:text-lg; /* Responsive font size for paragraphs */
     @apply leading-relaxed; /* Line height for paragraphs */
     @apply mb-4; /* Margin below paragraphs */
   }
 
-  /* Style buttons */
-  button {
-    background-color: var(--primary);
-    color: var(--primary-foreground);
-    border-radius: var(--radius);
-    @apply px-4 py-2; /* Padding inside buttons */
-    @apply text-base lg:text-lg; /* Responsive font size for buttons */
-    &:hover {
-      background-color: var(--primary-foreground);
-      color: var(--primary);
-    }
-  }
 
-  /* Style input fields */
-  input, textarea {
-    background-color: var(--input);
-    color: var(--foreground);
-    border-radius: var(--radius);
-    @apply px-2 py-1; /* Padding inside input fields */
-    @apply text-base lg:text-lg; /* Responsive font size for input fields */
-    border: 1px solid var(--border);
-  }
-
-  /* Style card elements */
-  .card {
-    background-color: var(--card);
-    color: var(--card-foreground);
-    border-radius: var(--radius);
-    @apply p-4 mb-4; /* Padding inside card elements */
-    @apply shadow-md; /* Shadow for card elements */
-  }
 }

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Booking } from '../assets/data/Booking.js'; // Correct path to import Booking model
+import { Booking } from '../assets/data/Booking.js';
 import mongoose from 'mongoose';
 
 const bookingRouter = Router();
@@ -90,6 +90,20 @@ bookingRouter.delete('/all', async (req, res) => {
     res.status(200).json({ message: 'All bookings deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Error deleting all bookings', error: err.message });
+  }
+});
+
+// Get the count of bookings for a specific month
+bookingRouter.get('/count/:year/:month', async (req, res) => {
+  try {
+    const { year, month } = req.params;
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+
+    const count = await Booking.countDocuments({ date: { $gte: startDate, $lte: endDate } });
+    res.json({ count });
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching booking count', error: err.message });
   }
 });
 

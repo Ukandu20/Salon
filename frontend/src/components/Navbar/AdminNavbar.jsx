@@ -1,0 +1,95 @@
+import React, { useState } from 'react';
+import classes from './Sidebar.module.css';
+import { IconButton } from '@chakra-ui/react';
+import { Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
+import { HamburgerIcon } from '@chakra-ui/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGauge, faCut, faImages, faCalendarAlt, faUsers, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import Dashboard from '../../pages/Admin/dashboard';
+
+export default function AdminSidebar() {
+  const [activeTab, setActiveTab] = useState('dashboard');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
+
+  return (
+    <div className={classes.wrapper}>
+      <div className={classes.sidebar}>
+        <nav>
+          {/* Sidebar Navigation links */}
+          <ul className={classes.sidebar_links}>
+            <li>
+              <button onClick={() => handleTabChange('dashboard')} className={activeTab === 'dashboard' ? classes.active : ''}>
+                <FontAwesomeIcon icon={faGauge} />
+                <span className={classes.linkText}>Dashboard</span>
+              </button>
+            </li>
+            <li>
+              <button onClick={() => handleTabChange('services')} className={activeTab === 'services' ? classes.active : ''}>
+                <FontAwesomeIcon icon={faCut} />
+                <span className={classes.linkText}>Services</span>
+              </button>
+            </li>
+            <li>
+              <button onClick={() => handleTabChange('bookings')} className={activeTab === 'bookings' ? classes.active : ''}>
+                <FontAwesomeIcon icon={faCalendarAlt} />
+                <span className={classes.linkText}>Bookings</span>
+              </button>
+            </li>
+            <li>
+              <button onClick={() => handleTabChange('users')} className={activeTab === 'users' ? classes.active : ''}>
+                <FontAwesomeIcon icon={faUsers} />
+                <span className={classes.linkText}>Users</span>
+              </button>
+            </li>
+            <li>
+              <button onClick={() => handleTabChange('reports')} className={activeTab === 'reports' ? classes.active : ''}>
+                <FontAwesomeIcon icon={faChartBar} />
+                <span className={classes.linkText}>Reports</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      {/* Hamburger Menu for smaller screens */}
+      <div className={classes.hamburgerMenu}>
+        <Menu>
+          <MenuButton
+            as={IconButton}
+            aria-label='Options'
+            icon={<HamburgerIcon />}
+          />
+          <MenuList>
+            <MenuItem as='button' onClick={() => handleTabChange('dashboard')} className={classes.menuItem}>
+              Dashboard
+            </MenuItem>
+            <MenuItem as='button' onClick={() => handleTabChange('services')} className={classes.menuItem}>
+              Services
+            </MenuItem>
+            <MenuItem as='button' onClick={() => handleTabChange('bookings')} className={classes.menuItem}>
+              Bookings
+            </MenuItem>
+            <MenuItem as='button' onClick={() => handleTabChange('users')} className={classes.menuItem}>
+              Users
+            </MenuItem>
+            <MenuItem as='button' onClick={() => handleTabChange('reports')} className={classes.menuItem}>
+              Reports
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      </div>
+
+      {/* Content Area */}
+      <div className={classes.content}>
+        {activeTab === 'dashboard' && <div>< Dashboard/></div>}
+        {activeTab === 'services' && <div>Services Management Content</div>}
+        {activeTab === 'bookings' && <div>Bookings Management Content</div>}
+        {activeTab === 'users' && <div>User Management Content</div>}
+        {activeTab === 'reports' && <div>Reports Content</div>}
+      </div>
+    </div>
+  );
+}
