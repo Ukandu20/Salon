@@ -1,13 +1,16 @@
-import * as React from "react"
-import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
-import { DayPicker } from "react-day-picker"
-import { cn } from "../../lib/utils"
-import { buttonVariants } from "../../components/ui/button"
+import * as React from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
+import { DayPicker } from "react-day-picker";
+import { cn } from "../../lib/utils";
+import { buttonVariants } from "../../components/ui/button";
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  selected,
+  onSelect,
+  disabled,
   ...props
 }) {
   const customClassNames = {
@@ -15,7 +18,23 @@ function Calendar({
     day_selected: cn(
       "bg-primary text-primary-foreground hover:bg-primary-dark hover:text-white focus:bg-primary-dark focus:text-white",
       classNames?.day_selected
-    )
+    ),
+    day_disabled: cn(
+      "text-muted-foreground opacity-50 cursor-not-allowed",
+      classNames?.day_disabled
+    ),
+  };
+
+  const [month, setMonth] = React.useState(selected || new Date());
+
+  React.useEffect(() => {
+    if (selected) {
+      setMonth(selected);
+    }
+  }, [selected]);
+
+  const modifiers = {
+    disabled: (date) => disabled(date),
   };
 
   return (
@@ -52,7 +71,7 @@ function Calendar({
         day_range_end: "day-range-end",
         day_today: "bg-accent text-accent-foreground",
         day_outside: "text-muted-foreground opacity-50  aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
-        day_disabled: "text-muted-foreground opacity-50",
+        day_disabled: "text-muted-foreground opacity-50 cursor-not-allowed",
         day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",
         ...customClassNames,
@@ -61,10 +80,16 @@ function Calendar({
         IconLeft: ({ ...props }) => <ChevronLeftIcon className="h-4 w-4" />,
         IconRight: ({ ...props }) => <ChevronRightIcon className="h-4 w-4" />,
       }}
+      selected={selected}
+      onSelect={onSelect}
+      month={month}
+      onMonthChange={setMonth}
+      modifiers={modifiers}
       {...props}
     />
   );
 }
-Calendar.displayName = "Calendar"
 
-export { Calendar }
+Calendar.displayName = "Calendar";
+
+export { Calendar };
