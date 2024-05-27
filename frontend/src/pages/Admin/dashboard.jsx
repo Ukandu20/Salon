@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import classes from './dashboard.module.css';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getAll, getBookingCountByMonth, getTotalUserCount, getTotalUserCountByMonth, getUniqueUserCount, getUniqueUserCountByMonth } from '../../bookingService';
-import { DatePickerWithRange } from './DatePickerWithRange';
-import { DataTable } from './DataTable';
+import React, { useState, useEffect } from "react";
+import classes from "./dashboard.module.css";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { getAll, getBookingCountByMonth, getTotalUserCount, getTotalUserCountByMonth, getUniqueUserCount, getUniqueUserCountByMonth } from "../../bookingService";
+import { DatePickerWithRange } from "./DatePickerWithRange";
+import { DataTable } from "./DataTable";
+import { TARGET_CARD_LENGTH } from "./Constants";
+import RecentBookings from "./RecentBookings";
+
 
 export default function Dashboard() {
   const [totalBookings, setTotalBookings] = useState(0);
@@ -15,8 +18,11 @@ export default function Dashboard() {
   const [uniqueUserGrowthPercentage, setUniqueUserGrowthPercentage] = useState(0);
   const [bookings, setBookings] = useState([]);
   const [filteredBookings, setFilteredBookings] = useState([]);
+  const [recentBookings, setRecentBookings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [recentPage, setRecentPage] = useState(1);
   const itemsPerPage = 10;
+  const recentItemsPerPage = 5;
   const [dateRange, setDateRange] = useState({ from: null, to: null });
 
   useEffect(() => {
@@ -25,6 +31,7 @@ export default function Dashboard() {
         const bookingsData = await getAll();
         setBookings(bookingsData); // Set the booking details
         setFilteredBookings(bookingsData); // Set the filtered bookings
+        setRecentBookings(bookingsData.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))); // Set the recent bookings sorted by creation date
         setTotalBookings(bookingsData.length); // Set the total number of bookings
 
         const currentDate = new Date();
@@ -82,11 +89,26 @@ export default function Dashboard() {
   const endIndex = startIndex + itemsPerPage;
   const currentBookings = filteredBookings.slice(startIndex, endIndex);
 
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
+  
+   // Calculate the total number of pages
+   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
+
+   // Calculate the recent bookings to display on the current page
+   const recentStartIndex = (recentPage - 1) * recentItemsPerPage;
+   const recentEndIndex = recentStartIndex + recentItemsPerPage;
+   const currentRecentBookings = recentBookings.slice(recentStartIndex, recentEndIndex);
+ 
+   // Calculate the total number of pages for recent bookings
+   const recentTotalPages = Math.ceil(recentBookings.length / recentItemsPerPage);
+
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
+  };
+
+  
+  const handleRecentPageChange = (page) => {
+    setRecentPage(page);
   };
 
   return (
@@ -155,17 +177,52 @@ export default function Dashboard() {
         </Card>
       </section>
 
-      <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-        <div>
-          <DataTable
-            data={currentBookings}
-            itemsPerPage={itemsPerPage}
-            totalPages={totalPages}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
-        </div>
+
+      <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-1 my-10">
+        
       </section>
+
+
+      <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-1 my-10">
+        <Card className="bg-transparent">
+          <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="font-small">
+              All Bookings
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              data={currentBookings}
+              itemsPerPage={itemsPerPage}
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </CardContent>
+        </Card>
+
+        <Card className="bg-transparent">
+          <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="font-small">
+              Recent Bookings
+            </CardTitle>
+            <CardDescription>
+              You have New Bookings
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <RecentBookings
+              data={currentRecentBookings}
+              itemsPerPage={recentItemsPerPage}
+              totalPages={recentTotalPages}
+              currentPage={recentPage}
+              onPageChange={handleRecentPageChange}
+            />
+          </CardContent>
+        </Card>
+      </section>
+
+      
     </div>
   );
 }

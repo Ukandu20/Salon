@@ -17,14 +17,14 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
+    DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+
 import {
   Table,
   TableBody,
@@ -55,7 +55,7 @@ const statusColors = {
   completed: "bg-green-500",
 };
 
-export function DataTable({ data, itemsPerPage, totalPages, currentPage, onPageChange }) {
+export default function RecentBookings({ data, itemsPerPage, totalPages, currentPage, onPageChange }) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -67,14 +67,6 @@ export function DataTable({ data, itemsPerPage, totalPages, currentPage, onPageC
     });
     return initialStatusMap;
   });
-
-  React.useEffect(() => {
-    const initialStatusMap = {};
-    data.forEach(booking => {
-      initialStatusMap[booking._id] = booking.status || 'pending';
-    });
-    setStatusMap(initialStatusMap);
-  }, [data]);
 
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
@@ -109,27 +101,31 @@ export function DataTable({ data, itemsPerPage, totalPages, currentPage, onPageC
       enableHiding: false,
     },
     {
-      accessorKey: "firstName",
-      header: "First Name",
-    },
-    {
-      accessorKey: "lastName",
-      header: "Last Name",
-    },
-    {
-      accessorKey: "email",
-      header: "Email",
-    },
-    {
-      accessorKey: "date",
-      header: "Date",
+      accessorKey: "details",
+      header: "Details",
       cell: ({ row }) => (
-        <div>{new Date(row.getValue("date")).toLocaleDateString()}</div>
+        <div>
+          <p className="text-sm font-medium leading-none">{row.original.firstName} {row.original.lastName}</p>
+          <p className="text-sm text-muted-foreground">{row.original.email}</p>
+        </div>
       ),
     },
     {
-      accessorKey: "time",
-      header: "Time",
+        accessorKey: "date",
+        header: "Booking Details",
+        cell: ({ row }) => (
+          <div>
+            <p className="text-sm font-medium leading-none">{new Date(row.getValue("date")).toLocaleDateString()}</p>
+            <p className="text-sm text-muted-foreground">{row.original.time}</p>
+          </div>
+        ),
+      },
+    {
+      accessorKey: "createdAt",
+      header: "Appointment Date",
+      cell: ({ row }) => (
+        <div>{new Date(row.getValue("createdAt")).toLocaleDateString()}</div>
+      ),
     },
     {
       accessorKey: "service",
@@ -195,7 +191,7 @@ export function DataTable({ data, itemsPerPage, totalPages, currentPage, onPageC
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(booking._id)}
-                className="bg-green-500"
+                className="bg-background"
               >
                 Confirm Booking
               </DropdownMenuItem>
@@ -247,7 +243,7 @@ export function DataTable({ data, itemsPerPage, totalPages, currentPage, onPageC
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+        <div className="flex items-center py-4">
         <Input
           placeholder="Filter by first name..."
           value={table.getColumn("firstName")?.getFilterValue() || ""}

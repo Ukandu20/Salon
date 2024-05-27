@@ -12,7 +12,9 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'reserved', 'confirmed', 'cancelled', 'completed'],
     default: 'pending'
-  }
+  },
+  createdAt: { type: Date, default: Date.now } // New field to store booking creation time
 });
+
 
 export const Booking = mongoose.model('Booking', bookingSchema);
