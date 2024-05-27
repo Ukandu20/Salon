@@ -8,13 +8,14 @@ const standardTimeSlots = ['9:00 AM', '11:00 AM', '1:00 PM', '5:00 PM'];
 // Get all bookings
 bookingRouter.get('/', async (req, res) => {
   try {
-    const query = req.query; // Capture all query parameters
-    const bookings = await Booking.find(query); // Pass query directly to find
+    const query = req.query;
+    const bookings = await Booking.find(query);
     res.json(bookings);
   } catch (err) {
     res.status(500).json({ message: 'Error fetching bookings', error: err.message });
   }
 });
+
 
 // Get booking by specific parameter
 bookingRouter.get('/:field/:value', async (req, res) => {
@@ -51,6 +52,29 @@ bookingRouter.post('/', async (req, res) => {
     res.status(201).json({ message: 'Booking created successfully.', booking: newBooking });
   } catch (err) {
     res.status(500).json({ message: 'Error creating booking', error: err.message });
+  }
+});
+
+// Update booking status
+bookingRouter.put('/status/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const allowedStatuses = ['pending', 'reserved', 'confirmed', 'cancelled', 'completed'];
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+
+    const booking = await Booking.findByIdAndUpdate(id, { status }, { new: true });
+
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    res.json({ message: 'Booking status updated successfully', booking });
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating booking status', error: err.message });
   }
 });
 
@@ -154,7 +178,5 @@ bookingRouter.get('/count-unique-users/:year/:month', async (req, res) => {
     res.status(500).json({ message: 'Error fetching unique user count', error: err.message });
   }
 });
-
-
 
 export default bookingRouter;
