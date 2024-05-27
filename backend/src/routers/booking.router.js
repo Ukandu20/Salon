@@ -55,6 +55,7 @@ bookingRouter.post('/', async (req, res) => {
   }
 });
 
+
 // Update booking status
 bookingRouter.put('/status/:id', async (req, res) => {
   try {
