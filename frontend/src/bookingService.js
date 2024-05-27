@@ -85,3 +85,13 @@ function handleError(error) {
   console.error('API call failed:', error);
   throw new Error('Failed to fetch from the API', { cause: error });
 }
+
+// Function to update booking status
+export const updateBookingStatus = async (bookingId, status) => {
+  try {
+    const response = await axios.put(`/api/bookings/status/${encodeURIComponent(bookingId)}`, { status });
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
