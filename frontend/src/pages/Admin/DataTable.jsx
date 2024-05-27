@@ -48,11 +48,11 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const statusColors = {
-  pending: "text-yellow-500",
-  reserved: "text-blue-500",
-  confirmed: "text-green-500",
-  cancelled: "text-red-500",
-  completed: "text-gray-500",
+  pending: "bg-yellow-500",
+  reserved: "bg-blue-500",
+  confirmed: "bg-teal-500",
+  cancelled: "bg-red-500",
+  completed: "bg-green-500",
 };
 
 export function DataTable({ data, itemsPerPage, totalPages, currentPage, onPageChange }) {
@@ -187,7 +187,7 @@ export function DataTable({ data, itemsPerPage, totalPages, currentPage, onPageC
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => navigator.clipboard.writeText(booking._id)}
-                className="bg-background"
+                className="bg-green-500"
               >
                 Confirm Booking
               </DropdownMenuItem>
