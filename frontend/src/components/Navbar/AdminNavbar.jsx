@@ -1,94 +1,108 @@
 import React, { useState } from 'react';
-import classes from './Sidebar.module.css';
 import { IconButton } from '@chakra-ui/react';
 import { Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGauge, faCut, faImages, faCalendarAlt, faUsers, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { faGauge, faCut, faCalendarAlt, faUsers, faChartBar } from '@fortawesome/free-solid-svg-icons';
+import { Button } from 'antd';
+import { Menu as AntMenu } from 'antd';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import Dashboard from '../../pages/Admin/dashboard';
+import AdminServices from '../../pages/Admin/services';
+import AdminBookings from '../../pages/Admin/bookings';
+import Users from '../../pages/Admin/users';
+import Reports from '../../pages/Admin/reports';
+import classes from './Sidebar.module.css';
+
+const items = [
+  {
+    key: 'dashboard',
+    label: 'Dashboard',
+    icon: <FontAwesomeIcon icon={faGauge} />,
+    
+  },
+  {
+    key: 'bookings',
+    label: 'Bookings',
+    icon: <FontAwesomeIcon icon={faCalendarAlt} />,
+  },
+  {
+    key: 'services',
+    label: 'Services',
+    icon: <FontAwesomeIcon icon={faCut} />,
+  },
+  {
+    key: 'users',
+    label: 'Users',
+    icon: <FontAwesomeIcon icon={faUsers} />,
+  },
+  {
+    key: 'reports',
+    label: 'Reports',
+    icon: <FontAwesomeIcon icon={faChartBar} />,
+  },
+];
 
 export default function AdminSidebar() {
+  const [collapsed, setCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
+
+  const handleTabChange = (e) => {
+    setActiveTab(e.key);
   };
 
   return (
     <div className={classes.wrapper}>
-      <div className={classes.sidebar}>
-        <nav>
-          {/* Sidebar Navigation links */}
-          <ul className={classes.sidebar_links}>
-            <li>
-              <button onClick={() => handleTabChange('dashboard')} className={activeTab === 'dashboard' ? classes.active : ''}>
-                <FontAwesomeIcon icon={faGauge} />
-                <span className={classes.linkText}>Dashboard</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={() => handleTabChange('services')} className={activeTab === 'services' ? classes.active : ''}>
-                <FontAwesomeIcon icon={faCut} />
-                <span className={classes.linkText}>Services</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={() => handleTabChange('bookings')} className={activeTab === 'bookings' ? classes.active : ''}>
-                <FontAwesomeIcon icon={faCalendarAlt} />
-                <span className={classes.linkText}>Bookings</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={() => handleTabChange('users')} className={activeTab === 'users' ? classes.active : ''}>
-                <FontAwesomeIcon icon={faUsers} />
-                <span className={classes.linkText}>Users</span>
-              </button>
-            </li>
-            <li>
-              <button onClick={() => handleTabChange('reports')} className={activeTab === 'reports' ? classes.active : ''}>
-                <FontAwesomeIcon icon={faChartBar} />
-                <span className={classes.linkText}>Reports</span>
-              </button>
-            </li>
-          </ul>
-        </nav>
+      <div className={`${classes.sidebar} ${collapsed ? classes.collapsed : ''}`}>
+        <AntMenu
+          onClick={handleTabChange}
+          selectedKeys={[activeTab]}
+          mode="inline"
+          inlineCollapsed={collapsed}
+          items={items.map((item) => ({
+            ...item,
+            className: activeTab === item.key ? classes.activeTab : '',
+          }))}
+        />
       </div>
 
-      {/* Hamburger Menu for smaller screens */}
+      <div className={`${classes.content} ${collapsed ? classes.collapsedContent : ''}`}>
+        {activeTab === 'dashboard' && <Dashboard />}
+        {activeTab === 'services' && <AdminServices />}
+        {activeTab === 'bookings' && <AdminBookings />}
+        {activeTab === 'users' && <Users />}
+        {activeTab === 'reports' && <Reports />}
+      </div>
+
       <div className={classes.hamburgerMenu}>
         <Menu>
           <MenuButton
             as={IconButton}
-            aria-label='Options'
+            aria-label="Options"
             icon={<HamburgerIcon />}
           />
           <MenuList>
-            <MenuItem as='button' onClick={() => handleTabChange('dashboard')} className={classes.menuItem}>
+            <MenuItem as="button" onClick={() => handleTabChange({ key: 'dashboard' })} className={classes.menuItem}>
               Dashboard
             </MenuItem>
-            <MenuItem as='button' onClick={() => handleTabChange('services')} className={classes.menuItem}>
+            <MenuItem as="button" onClick={() => handleTabChange({ key: 'services' })} className={classes.menuItem}>
               Services
             </MenuItem>
-            <MenuItem as='button' onClick={() => handleTabChange('bookings')} className={classes.menuItem}>
+            <MenuItem as="button" onClick={() => handleTabChange({ key: 'bookings' })} className={classes.menuItem}>
               Bookings
             </MenuItem>
-            <MenuItem as='button' onClick={() => handleTabChange('users')} className={classes.menuItem}>
+            <MenuItem as="button" onClick={() => handleTabChange({ key: 'users' })} className={classes.menuItem}>
               Users
             </MenuItem>
-            <MenuItem as='button' onClick={() => handleTabChange('reports')} className={classes.menuItem}>
+            <MenuItem as="button" onClick={() => handleTabChange({ key: 'reports' })} className={classes.menuItem}>
               Reports
             </MenuItem>
           </MenuList>
         </Menu>
-      </div>
-
-      {/* Content Area */}
-      <div className={classes.content}>
-        {activeTab === 'dashboard' && <div>< Dashboard/></div>}
-        {activeTab === 'services' && <div>Services Management Content</div>}
-        {activeTab === 'bookings' && <div>Bookings Management Content</div>}
-        {activeTab === 'users' && <div>User Management Content</div>}
-        {activeTab === 'reports' && <div>Reports Content</div>}
       </div>
     </div>
   );

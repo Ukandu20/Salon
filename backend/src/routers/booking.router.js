@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Booking } from '../assets/data/Booking.js';
+import { Service }  from '../assets/data/Service.js';
 import mongoose from 'mongoose';
 
 const bookingRouter = Router();
@@ -12,9 +13,11 @@ bookingRouter.get('/', async (req, res) => {
     const bookings = await Booking.find(query);
     res.json(bookings);
   } catch (err) {
+    console.error('Error fetching bookings:', err.message);
     res.status(500).json({ message: 'Error fetching bookings', error: err.message });
   }
 });
+
 
 
 // Get booking by specific parameter
@@ -30,6 +33,7 @@ bookingRouter.get('/:field/:value', async (req, res) => {
     }
     res.json(bookings);
   } catch (err) {
+    console.error('Error fetching booking:', err.message);
     res.status(500).json({ message: 'Error fetching booking', error: err.message });
   }
 });
@@ -47,10 +51,26 @@ bookingRouter.post('/', async (req, res) => {
       return res.status(409).json({ message: 'A booking already exists with the given date and time' });
     }
 
-    const newBooking = new Booking({ firstName, lastName, phoneNumber, email, service, date: new Date(date), time });
+    const selectedService = await Service.findOne({ subservice: service });
+    if (!selectedService) {
+      return res.status(400).json({ message: 'Selected service not found.' });
+    }
+
+    const newBooking = new Booking({
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      service: selectedService.subservice,
+      price: selectedService.price,
+      date: new Date(date),
+      time
+    });
+
     await newBooking.save();
     res.status(201).json({ message: 'Booking created successfully.', booking: newBooking });
   } catch (err) {
+    console.error('Error creating booking:', err.message);
     res.status(500).json({ message: 'Error creating booking', error: err.message });
   }
 });

@@ -22,10 +22,12 @@ export default function Booking() {
         phoneNumber: '',
         email: '',
         service: '',
+        price: 0, // New field for the price
         date: '',
         time: ''
     });
 
+    const [services, setServices] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
     const [timeSlots, setTimeSlots] = useState([]);
     const [selectedTime, setSelectedTime] = useState('');
@@ -34,6 +36,7 @@ export default function Booking() {
 
     useEffect(() => {
         fetchFullyBookedDates();
+        fetchServices();
     }, []);
 
     const fetchFullyBookedDates = async () => {
@@ -42,6 +45,15 @@ export default function Booking() {
             setFullyBookedDates(response.data);
         } catch (error) {
             console.error('Failed to fetch fully booked dates:', error);
+        }
+    };
+
+    const fetchServices = async () => {
+        try {
+            const response = await axios.get('/api/services');
+            setServices(response.data);
+        } catch (error) {
+            console.error('Failed to fetch services:', error);
         }
     };
 
@@ -68,13 +80,14 @@ export default function Booking() {
         }
     };
 
+    const handleServiceSelection = (service) => {
+        const selectedService = services.find(s => s.subservice === service);
+        setFormData({ ...formData, service: selectedService.subservice, price: selectedService.price });
+    };
+
     const handleTimeSelection = (time) => {
         setFormData({ ...formData, time });
         setSelectedTime(time);
-    };
-
-    const handleServiceSelection = (service) => {
-        setFormData({ ...formData, service });
     };
 
     const handleSubmit = async (e) => {
@@ -111,6 +124,7 @@ export default function Booking() {
             phoneNumber: '',
             email: '',
             service: '',
+            price: 0,
             date: '',
             time: ''
         });
@@ -154,10 +168,13 @@ export default function Booking() {
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectItem value="Twists/Braids">Twists/Braids</SelectItem>
-                                    <SelectItem value="Locs Retwist">Locs Retwist</SelectItem>
-                                    <SelectItem value="Extensions">Extensions</SelectItem>
-                                    <SelectItem value="Haircuts(Male)">Haircuts(Male)</SelectItem>
+                                    {services.map(service => (
+                                        <SelectItem key={service._id} value={service.subservice}>
+                                            {service.subservice}:  ${service.price}
+                                        </SelectItem>
+
+                                        
+                                    ))}
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -178,7 +195,7 @@ export default function Booking() {
                             selected={selectedDate}
                             onSelect={setDate}
                             disabled={isDateDisabled}
-                            className="rounded-md border shadow"
+                            className="rounded-lg border shadow"
                         />
                     </div>
                     

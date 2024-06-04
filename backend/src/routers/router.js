@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import bookingRouter from './booking.router.js';
+import serviceRouter from './service.router.js';
 
 const router = Router();
 
@@ -30,5 +31,6 @@ router.get('/', (req, res) => {
 
 // Use the booking router for all /api/bookings routes
 router.use('/api/bookings', bookingRouter);
+router.use('/api/services', serviceRouter); // Add service routes
 
 export default router;

@@ -1,17 +1,37 @@
+
+
 .container {
-    margin: 0 100px;
-    justify-content: center;
-    margin-bottom: 150px;
-}
-
-.card {
-    background-color: azure;
-}
-
-.Tables {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    margin-top: 40px;
-    border: 5px;
-}
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .centerContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+  }
+  
+  .Tables {
+    width: 100%;
+    max-width: 1200px;
+    margin-top: 20px;
+  }
+  
+  .AccordionTrigger {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    border: none;
+    background: none;
+    width: 100%;
+  }
+  

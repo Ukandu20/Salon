@@ -1,10 +1,5 @@
 import * as React from "react";
 import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-} from "@radix-ui/react-icons";
-import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -12,7 +7,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -20,7 +14,6 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -32,53 +25,93 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { updateBookingStatus } from '../../bookingService';
+import axios from "axios";
+import { useToast } from "@chakra-ui/react";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-const statusColors = {
-  pending: "bg-yellow-500",
-  reserved: "bg-blue-500",
-  confirmed: "bg-teal-500",
-  cancelled: "bg-red-500",
-  completed: "bg-green-500",
-};
-
-export default function RecentBookings({ data, itemsPerPage, totalPages, currentPage, onPageChange }) {
+export function ServicesTable({ data, itemsPerPage, totalPages, currentPage, onPageChange }) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const [statusMap, setStatusMap] = React.useState(() => {
-    const initialStatusMap = {};
-    data.forEach(booking => {
-      initialStatusMap[booking._id] = booking.status || 'pending';
-    });
-    return initialStatusMap;
+  const [editRow, setEditRow] = React.useState(null);
+  const [formData, setFormData] = React.useState({
+    service: '',
+    subservice: '',
+    price: ''
   });
+  const toast = useToast();
 
-  const handleStatusChange = async (bookingId, newStatus) => {
+  // Handle input change for editing
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  // Handle edit action
+  const handleEditService = (service) => {
+    setEditRow(service._id);
+    setFormData({
+      service: service.service,
+      subservice: service.subservice,
+      price: service.price,
+    });
+  };
+
+  // Handle save action
+  const handleSaveService = async (serviceId) => {
     try {
-      await updateBookingStatus(bookingId, newStatus);
-      setStatusMap(prev => ({
-        ...prev,
-        [bookingId]: newStatus,
-      }));
+      await axios.put(`http://localhost:5000/api/services/${serviceId}`, formData);
+      toast({
+        title: 'Service updated',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      setEditRow(null);
+      const updatedData = data.map((item) =>
+        item._id === serviceId ? { ...item, ...formData } : item
+      );
+      onPageChange(currentPage, updatedData); // Refresh the data locally
     } catch (error) {
-      console.error('Error updating status:', error);
+      console.error('Error updating service:', error);
+      toast({
+        title: 'Error updating service',
+        description: error.response ? error.response.data.message : 'Server not reachable',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
+  // Handle delete action
+  const handleDeleteService = async (serviceId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/services/${serviceId}`);
+      toast({
+        title: 'Service deleted',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      const updatedData = data.filter((item) => item._id !== serviceId);
+      onPageChange(currentPage, updatedData); // Refresh the data locally
+    } catch (error) {
+      console.error('Error deleting service:', error);
+      toast({
+        title: 'Error deleting service',
+        description: error.response ? error.response.data.message : 'Server not reachable',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  // Define columns for the table
   const columns = React.useMemo(() => [
     {
       id: "select",
@@ -100,129 +133,78 @@ export default function RecentBookings({ data, itemsPerPage, totalPages, current
       enableHiding: false,
     },
     {
-      accessorKey: "details",
-      header: "Details",
-      cell: ({ row }) => (
-        <div>
-          <p className="text-sm font-medium leading-none">{row.original.firstName} {row.original.lastName}</p>
-          <p className="text-sm text-muted-foreground">{row.original.email}</p>
-        </div>
-      ),
-    },
-    {
-      accessorKey: "date",
-      header: "Appointment Date",
-      cell: ({ row }) => (
-        <div>{new Date(row.getValue("date")).toLocaleDateString()}</div>
-      ),
-    },
-    {
-      accessorKey: "time",
-      header: "Time",
-    },
-    {
       accessorKey: "service",
       header: "Service",
+      cell: ({ row }) => (
+        row.original._id === editRow ? (
+          <Input
+            type="text"
+            name="service"
+            value={formData.service}
+            onChange={handleInputChange}
+          />
+        ) : (
+          row.original.service
+        )
+      )
     },
     {
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ row }) => {
-        const booking = row.original;
-        const status = statusMap[booking._id] || 'pending';
-
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className={`w-full ${statusColors[status]}`}>
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              {['pending', 'reserved', 'confirmed', 'cancelled', 'completed'].map((statusOption) => (
-                <DropdownMenuItem
-                  key={statusOption}
-                  onClick={() => handleStatusChange(booking._id, statusOption)}
-                  className={statusColors[statusOption]}
-                >
-                  {statusOption.charAt(0).toUpperCase() + statusOption.slice(1)}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      }
+      accessorKey: "subservice",
+      header: "Subservice Name",
+      cell: ({ row }) => (
+        row.original._id === editRow ? (
+          <Input
+            type="text"
+            name="subservice"
+            value={formData.subservice}
+            onChange={handleInputChange}
+          />
+        ) : (
+          row.original.subservice
+        )
+      )
+    },
+    {
+      accessorKey: "price",
+      header: "Price",
+      cell: ({ row }) => (
+        row.original._id === editRow ? (
+          <Input
+            type="number"
+            name="price"
+            value={formData.price}
+            onChange={handleInputChange}
+          />
+        ) : (
+          `$${row.getValue("price")}`
+        )
+      )
     },
     {
       id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <div className="space-x-2">
+          {row.original._id === editRow ? (
+            <Button variant="outline" onClick={() => handleSaveService(row.original._id)}>
+              Save
+            </Button>
+          ) : (
+            <Button variant="outline" onClick={() => handleEditService(row.original)}>
+              Edit
+            </Button>
+          )}
+          <Button variant="outline" onClick={() => handleDeleteService(row.original._id)}>
+            Delete
+          </Button>
+        </div>
+      ),
+      enableSorting: false,
       enableHiding: false,
-      cell: ({ row }) => {
-        const booking = row.original;
-        const [isOpen, setIsOpen] = React.useState(false);
-
-        const handleCancelBooking = async () => {
-          try {
-            await updateBookingStatus(booking._id, 'cancelled');
-            setStatusMap(prev => ({
-              ...prev,
-              [booking._id]: 'cancelled',
-            }));
-            setIsOpen(false);
-          } catch (error) {
-            console.error('Error cancelling booking:', error);
-          }
-        };
-
-        const handleConfirmBooking = async () => {
-          try {
-            await updateBookingStatus(booking._id, 'confirmed');
-            setStatusMap(prev => ({
-              ...prev,
-              [booking._id]: 'confirmed',
-            }));
-            setIsOpen(false);
-          } catch (error) {
-            console.error('Error confirming booking:', error);
-          }
-        };
-
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <DotsHorizontalIcon className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleConfirmBooking} className="bg-green-500">
-                Confirm Booking
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setIsOpen(true)} className="bg-destructive">
-                <div>Cancel Booking</div>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-            <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently cancel the booking.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel onClick={() => setIsOpen(false)}>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleCancelBooking}>Continue</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </DropdownMenu>
-        );
-      },
     },
-  ], [statusMap]);
+  ], [editRow, formData, handleInputChange]);
 
+  // Initialize the table
   const table = useReactTable({
     data,
     columns,
@@ -244,19 +226,20 @@ export default function RecentBookings({ data, itemsPerPage, totalPages, current
 
   return (
     <div className="w-full">
+      {/* Filter and column visibility controls */}
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter by first name..."
-          value={table.getColumn("details")?.getFilterValue() || ""}
+          placeholder="Filter by service..."
+          value={table.getColumn("service")?.getFilterValue() || ""}
           onChange={(event) =>
-            table.getColumn("details")?.setFilterValue(event.target.value)
+            table.getColumn("service")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Filters <ChevronDownIcon className="ml-2 h-4 w-4" />
+              Filters
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -278,6 +261,8 @@ export default function RecentBookings({ data, itemsPerPage, totalPages, current
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {/* Table displaying services */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -320,6 +305,8 @@ export default function RecentBookings({ data, itemsPerPage, totalPages, current
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination controls */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
