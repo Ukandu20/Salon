@@ -17,14 +17,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
-    DropdownMenuCheckboxItem,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-
 import {
   Table,
   TableBody,
@@ -111,21 +110,15 @@ export default function RecentBookings({ data, itemsPerPage, totalPages, current
       ),
     },
     {
-        accessorKey: "date",
-        header: "Booking Details",
-        cell: ({ row }) => (
-          <div>
-            <p className="text-sm font-medium leading-none">{new Date(row.getValue("date")).toLocaleDateString()}</p>
-            <p className="text-sm text-muted-foreground">{row.original.time}</p>
-          </div>
-        ),
-      },
-    {
-      accessorKey: "createdAt",
+      accessorKey: "date",
       header: "Appointment Date",
       cell: ({ row }) => (
-        <div>{new Date(row.getValue("createdAt")).toLocaleDateString()}</div>
+        <div>{new Date(row.getValue("date")).toLocaleDateString()}</div>
       ),
+    },
+    {
+      accessorKey: "time",
+      header: "Time",
     },
     {
       accessorKey: "service",
@@ -180,6 +173,19 @@ export default function RecentBookings({ data, itemsPerPage, totalPages, current
           }
         };
 
+        const handleConfirmBooking = async () => {
+          try {
+            await updateBookingStatus(booking._id, 'confirmed');
+            setStatusMap(prev => ({
+              ...prev,
+              [booking._id]: 'confirmed',
+            }));
+            setIsOpen(false);
+          } catch (error) {
+            console.error('Error confirming booking:', error);
+          }
+        };
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -189,33 +195,28 @@ export default function RecentBookings({ data, itemsPerPage, totalPages, current
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(booking._id)}
-                className="bg-background"
-              >
+              <DropdownMenuItem onClick={handleConfirmBooking} className="bg-green-500">
                 Confirm Booking
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setIsOpen(true)} className="bg-destructive">
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <div>Cancel Booking</div>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This will permanently cancel the booking.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleCancelBooking}>Continue</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+                <div>Cancel Booking</div>
               </DropdownMenuItem>
             </DropdownMenuContent>
+            <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently cancel the booking.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel onClick={() => setIsOpen(false)}>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleCancelBooking}>Continue</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </DropdownMenu>
         );
       },
@@ -243,12 +244,12 @@ export default function RecentBookings({ data, itemsPerPage, totalPages, current
 
   return (
     <div className="w-full">
-        <div className="flex items-center py-4">
+      <div className="flex items-center py-4">
         <Input
           placeholder="Filter by first name..."
-          value={table.getColumn("firstName")?.getFilterValue() || ""}
+          value={table.getColumn("details")?.getFilterValue() || ""}
           onChange={(event) =>
-            table.getColumn("firstName")?.setFilterValue(event.target.value)
+            table.getColumn("details")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

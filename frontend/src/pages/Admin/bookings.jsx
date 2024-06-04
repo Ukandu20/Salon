@@ -6,7 +6,7 @@ import { DatePickerWithRange } from "../../components/ui/DatePickerWithRange";
 import { DataTable } from "../../components/ui/DataTable";
 import { TARGET_CARD_LENGTH } from "./Constants";
 import RecentBookings from "./RecentBookings";
-import Chart from "@/components/ui/charts"; // Updated import
+
 
 export default function Dashboard() {
   const [totalBookings, setTotalBookings] = useState(0);
@@ -19,7 +19,6 @@ export default function Dashboard() {
   const [bookings, setBookings] = useState([]);
   const [filteredBookings, setFilteredBookings] = useState([]);
   const [recentBookings, setRecentBookings] = useState([]);
-  const [popularServices, setPopularServices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [recentPage, setRecentPage] = useState(1);
   const itemsPerPage = 10;
@@ -34,15 +33,6 @@ export default function Dashboard() {
         setFilteredBookings(bookingsData); // Set the filtered bookings
         setRecentBookings(bookingsData.slice().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))); // Set the recent bookings sorted by creation date
         setTotalBookings(bookingsData.length); // Set the total number of bookings
-
-        // Calculate popular services
-        const serviceCount = bookingsData.reduce((acc, booking) => {
-          acc[booking.service] = (acc[booking.service] || 0) + 1;
-          return acc;
-        }, {});
-
-        const popularServicesData = Object.entries(serviceCount).map(([name, value]) => ({ name, value }));
-        setPopularServices(popularServicesData); // Set the popular services
 
         const currentDate = new Date();
         const currentMonth = currentDate.getMonth() + 1;
@@ -124,7 +114,7 @@ export default function Dashboard() {
   return (
     <div>
       <div className={classes.heading}>
-        <h2>Dashboard</h2>
+        <h2>Bookings</h2>
         <DatePickerWithRange
           className="ml-4"
           dateRange={dateRange}
@@ -188,7 +178,28 @@ export default function Dashboard() {
       </section>
 
 
-      <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-2 my-10">   
+      <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-1 my-10">
+        
+      </section>
+
+
+      <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-1 my-10">
+        <Card className="bg-transparent">
+          <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="font-small">
+              All Bookings
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <DataTable
+              data={currentBookings}
+              itemsPerPage={itemsPerPage}
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </CardContent>
+        </Card>
 
         <Card className="bg-transparent">
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
@@ -209,44 +220,9 @@ export default function Dashboard() {
             />
           </CardContent>
         </Card>
-
-        <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-2 lg:grid-rows-">
-          <Card className="bg-transparent">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-lg font-medium">
-                Popular Services
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Chart data={popularServices} />
-            </CardContent>
-          </Card>
-
-          <Card className="bg-transparent">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="text-lg font-medium">
-                Monthly Revenue
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              You made $15000 this month
-            </CardContent>
-          </Card>  
-
-          <Card className="bg-transparent lg:col-span-2 lg:row-span-1">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="text-lg font-medium">
-                Overview
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Chart data={popularServices} />
-            </CardContent>
-          </Card>        
-        </section>
-
-        
       </section>
+
+      
     </div>
   );
 }
