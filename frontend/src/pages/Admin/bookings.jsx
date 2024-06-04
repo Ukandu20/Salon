@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import classes from './dashboard.module.css';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getAll, getBookingCountByMonth, getTotalUserCount, getTotalUserCountByMonth, getUniqueUserCount, getUniqueUserCountByMonth } from '../../bookingService';
-import { DatePickerWithRange } from './DatePickerWithRange';
-import { DataTable } from './DataTable';
-import RecentBookings from './RecentBookings';
-import { TARGET_CARD_LENGTH } from './Constants';
+import React, { useState, useEffect } from "react";
+import classes from "./dashboard.module.css";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { getAll, getBookingCountByMonth, getTotalUserCount, getTotalUserCountByMonth, getUniqueUserCount, getUniqueUserCountByMonth } from "../../bookingService";
+import { DatePickerWithRange } from "../../components/ui/DatePickerWithRange";
+import { DataTable } from "../../components/ui/DataTable";
+import { TARGET_CARD_LENGTH } from "./Constants";
+import RecentBookings from "./RecentBookings";
 
-const itemsPerPage = 10;
-const recentItemsPerPage = 5;
 
 export default function Dashboard() {
   const [totalBookings, setTotalBookings] = useState(0);
@@ -23,6 +21,8 @@ export default function Dashboard() {
   const [recentBookings, setRecentBookings] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [recentPage, setRecentPage] = useState(1);
+  const itemsPerPage = 10;
+  const recentItemsPerPage = 5;
   const [dateRange, setDateRange] = useState({ from: null, to: null });
 
   useEffect(() => {
@@ -89,21 +89,24 @@ export default function Dashboard() {
   const endIndex = startIndex + itemsPerPage;
   const currentBookings = filteredBookings.slice(startIndex, endIndex);
 
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
+  
+   // Calculate the total number of pages
+   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
 
-  // Calculate the recent bookings to display on the current page
-  const recentStartIndex = (recentPage - 1) * recentItemsPerPage;
-  const recentEndIndex = recentStartIndex + recentItemsPerPage;
-  const currentRecentBookings = recentBookings.slice(recentStartIndex, recentEndIndex);
+   // Calculate the recent bookings to display on the current page
+   const recentStartIndex = (recentPage - 1) * recentItemsPerPage;
+   const recentEndIndex = recentStartIndex + recentItemsPerPage;
+   const currentRecentBookings = recentBookings.slice(recentStartIndex, recentEndIndex);
+ 
+   // Calculate the total number of pages for recent bookings
+   const recentTotalPages = Math.ceil(recentBookings.length / recentItemsPerPage);
 
-  // Calculate the total number of pages for recent bookings
-  const recentTotalPages = Math.ceil(recentBookings.length / recentItemsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
+  
   const handleRecentPageChange = (page) => {
     setRecentPage(page);
   };
@@ -111,7 +114,7 @@ export default function Dashboard() {
   return (
     <div>
       <div className={classes.heading}>
-        <h2>Dashboard</h2>
+        <h2>Bookings</h2>
         <DatePickerWithRange
           className="ml-4"
           dateRange={dateRange}
@@ -120,7 +123,7 @@ export default function Dashboard() {
       </div>
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="text-primary" >
+        <Card className="text-primary">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-lg font-medium">
               Total Bookings
@@ -134,7 +137,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="text-primary" >
+        <Card className="text-primary">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-lg font-medium">
               Monthly Bookings
@@ -145,7 +148,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="text-primary" >
+        <Card className="text-primary">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-lg font-medium">
               Total Users
@@ -159,7 +162,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="text-primary" >
+        <Card className="text-primary">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-lg font-medium">
               Unique Users
@@ -174,8 +177,14 @@ export default function Dashboard() {
         </Card>
       </section>
 
-      <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-2 my-10">
-        <Card className="bg-transparent" style={{ height: TARGET_CARD_LENGTH }}>
+
+      <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-1 my-10">
+        
+      </section>
+
+
+      <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-1 my-10">
+        <Card className="bg-transparent">
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="font-small">
               All Bookings
@@ -192,24 +201,28 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-transparent" style={{ height: TARGET_CARD_LENGTH }}>
-          <CardHeader >
+        <Card className="bg-transparent">
+          <CardHeader className="flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="font-small">
               Recent Bookings
             </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <RecentBookings
-                data={currentRecentBookings}
-                itemsPerPage={recentItemsPerPage}
-                totalPages={recentTotalPages}
-                currentPage={recentPage}
-                onPageChange={handleRecentPageChange}
-              />
-            </CardContent>
-          
+            <CardDescription>
+              You have New Bookings
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <RecentBookings
+              data={currentRecentBookings}
+              itemsPerPage={recentItemsPerPage}
+              totalPages={recentTotalPages}
+              currentPage={recentPage}
+              onPageChange={handleRecentPageChange}
+            />
+          </CardContent>
         </Card>
       </section>
+
+      
     </div>
   );
 }
