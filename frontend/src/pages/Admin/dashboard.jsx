@@ -22,6 +22,7 @@ export default function Dashboard() {
   const [popularServices, setPopularServices] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [recentPage, setRecentPage] = useState(1);
+  const [monthlyRevenue, setMonthlyRevenue] = useState(0); // State for monthly revenue
   const itemsPerPage = 10;
   const recentItemsPerPage = 5;
   const [dateRange, setDateRange] = useState({ from: null, to: null });
@@ -73,6 +74,16 @@ export default function Dashboard() {
         const previousUniqueUserCount = await getUniqueUserCountByMonth(previousYear, previousMonth);
         const uniqueUserGrowth = previousUniqueUserCount === 0 ? 100 : ((currentUniqueUserCount - previousUniqueUserCount) / previousUniqueUserCount) * 100;
         setUniqueUserGrowthPercentage(uniqueUserGrowth.toFixed(1)); // Set the unique user growth percentage
+
+        // Calculate monthly revenue
+        const currentMonthRevenue = bookingsData
+          .filter(booking => {
+            const bookingDate = new Date(booking.date);
+            return bookingDate.getMonth() + 1 === currentMonth && bookingDate.getFullYear() === currentYear;
+          })
+          .reduce((acc, booking) => acc + booking.price, 0);
+
+        setMonthlyRevenue(currentMonthRevenue); // Set the monthly revenue
       } catch (error) {
         console.error('Error fetching bookings data:', error);
       }
@@ -123,25 +134,20 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div className={classes.heading}>
-        <h2>Dashboard</h2>
-        <DatePickerWithRange
-          className="ml-4"
-          dateRange={dateRange}
-          setDateRange={setDateRange}
-        />
+      <div className="flex font-bold">
+        <h1>Dashboard</h1>
       </div>
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="text-primary">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lg font-medium">
+            <CardTitle className="text-2xl font-bold">
               Total Bookings
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalBookings}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-slate-50">
               {bookingGrowthPercentage > 0 ? '+' : ''}{bookingGrowthPercentage}% from last month
             </p>
           </CardContent>
@@ -149,7 +155,7 @@ export default function Dashboard() {
 
         <Card className="text-primary">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lg font-medium">
+            <CardTitle className="text-2xl font-bold">
               Monthly Bookings
             </CardTitle>
           </CardHeader>
@@ -160,7 +166,7 @@ export default function Dashboard() {
 
         <Card className="text-primary">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lg font-medium">
+            <CardTitle className="text-2xl font-bold">
               Total Users
             </CardTitle>
           </CardHeader>
@@ -174,7 +180,7 @@ export default function Dashboard() {
 
         <Card className="text-primary">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-lg font-medium">
+            <CardTitle className="text-2xl font-bold">
               Unique Users
             </CardTitle>
           </CardHeader>
@@ -213,7 +219,7 @@ export default function Dashboard() {
         <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-2 lg:grid-rows-">
           <Card className="bg-transparent">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-lg font-medium">
+              <CardTitle className="text-2xl font-bold">
                 Popular Services
               </CardTitle>
             </CardHeader>
@@ -224,23 +230,23 @@ export default function Dashboard() {
 
           <Card className="bg-transparent">
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="text-lg font-medium">
+              <CardTitle className="text-2xl font-bold">
                 Monthly Revenue
               </CardTitle>
             </CardHeader>
             <CardContent>
-              You made $15000 this month
+              <div className="text-lg font-medium">You made ${monthlyRevenue} this month</div> {/* Display monthly revenue */}
             </CardContent>
           </Card>  
 
           <Card className="bg-transparent lg:col-span-2 lg:row-span-1">
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
-              <CardTitle className="text-lg font-medium">
+              <CardTitle className="text-2xl font-bold">
                 Overview
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Chart data={popularServices} />
+              
             </CardContent>
           </Card>        
         </section>

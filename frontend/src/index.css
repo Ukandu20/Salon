@@ -1,6 +1,7 @@
 /* Importing Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Imprima&family=Istok+Web:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 /* Importing Tailwind base, components, and utilities */
 @tailwind base;
@@ -67,13 +68,13 @@
   /* Apply dark theme and background/foreground colors to body */
   body {
     @apply dark bg-background text-foreground;
-    font-family: 'Istok Web', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
 
   /* Style headers (h1 to h6) with font sizes and margins */
   h1 {
     color: var(--foreground);
-    @apply text-4xl lg:text-5xl; /* Responsive font size for h1 */
+    @apply text-8xl lg:text-6xl; /* Responsive font size for h1 */
     @apply mb-4; /* Margin below h1 */
   }
   h2 {

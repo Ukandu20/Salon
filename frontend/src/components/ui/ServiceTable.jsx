@@ -25,13 +25,93 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import axios from "axios";
+import { useToast } from "@chakra-ui/react";
 
 export function ServicesTable({ data, itemsPerPage, totalPages, currentPage, onPageChange }) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [editRow, setEditRow] = React.useState(null);
+  const [formData, setFormData] = React.useState({
+    service: '',
+    subservice: '',
+    price: ''
+  });
+  const toast = useToast();
 
+  // Handle input change for editing
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  // Handle edit action
+  const handleEditService = (service) => {
+    setEditRow(service._id);
+    setFormData({
+      service: service.service,
+      subservice: service.subservice,
+      price: service.price,
+    });
+  };
+
+  // Handle save action
+  const handleSaveService = async (serviceId) => {
+    try {
+      await axios.put(`http://localhost:5000/api/services/${serviceId}`, formData);
+      toast({
+        title: 'Service updated',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      setEditRow(null);
+      const updatedData = data.map((item) =>
+        item._id === serviceId ? { ...item, ...formData } : item
+      );
+      onPageChange(currentPage, updatedData); // Refresh the data locally
+    } catch (error) {
+      console.error('Error updating service:', error);
+      toast({
+        title: 'Error updating service',
+        description: error.response ? error.response.data.message : 'Server not reachable',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  // Handle delete action
+  const handleDeleteService = async (serviceId) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/services/${serviceId}`);
+      toast({
+        title: 'Service deleted',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      const updatedData = data.filter((item) => item._id !== serviceId);
+      onPageChange(currentPage, updatedData); // Refresh the data locally
+    } catch (error) {
+      console.error('Error deleting service:', error);
+      toast({
+        title: 'Error deleting service',
+        description: error.response ? error.response.data.message : 'Server not reachable',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+  // Define columns for the table
   const columns = React.useMemo(() => [
     {
       id: "select",
@@ -55,18 +135,76 @@ export function ServicesTable({ data, itemsPerPage, totalPages, currentPage, onP
     {
       accessorKey: "service",
       header: "Service",
+      cell: ({ row }) => (
+        row.original._id === editRow ? (
+          <Input
+            type="text"
+            name="service"
+            value={formData.service}
+            onChange={handleInputChange}
+          />
+        ) : (
+          row.original.service
+        )
+      )
     },
     {
       accessorKey: "subservice",
       header: "Subservice Name",
+      cell: ({ row }) => (
+        row.original._id === editRow ? (
+          <Input
+            type="text"
+            name="subservice"
+            value={formData.subservice}
+            onChange={handleInputChange}
+          />
+        ) : (
+          row.original.subservice
+        )
+      )
     },
     {
       accessorKey: "price",
       header: "Price",
-      cell: ({ row }) => `$${row.getValue("price")}`,
+      cell: ({ row }) => (
+        row.original._id === editRow ? (
+          <Input
+            type="number"
+            name="price"
+            value={formData.price}
+            onChange={handleInputChange}
+          />
+        ) : (
+          `$${row.getValue("price")}`
+        )
+      )
     },
-  ], []);
+    {
+      id: "actions",
+      header: "Actions",
+      cell: ({ row }) => (
+        <div className="space-x-2">
+          {row.original._id === editRow ? (
+            <Button variant="outline" onClick={() => handleSaveService(row.original._id)}>
+              Save
+            </Button>
+          ) : (
+            <Button variant="outline" onClick={() => handleEditService(row.original)}>
+              Edit
+            </Button>
+          )}
+          <Button variant="outline" onClick={() => handleDeleteService(row.original._id)}>
+            Delete
+          </Button>
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+  ], [editRow, formData, handleInputChange]);
 
+  // Initialize the table
   const table = useReactTable({
     data,
     columns,
@@ -88,6 +226,7 @@ export function ServicesTable({ data, itemsPerPage, totalPages, currentPage, onP
 
   return (
     <div className="w-full">
+      {/* Filter and column visibility controls */}
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter by service..."
@@ -122,6 +261,8 @@ export function ServicesTable({ data, itemsPerPage, totalPages, currentPage, onP
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      {/* Table displaying services */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -164,6 +305,8 @@ export function ServicesTable({ data, itemsPerPage, totalPages, currentPage, onP
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination controls */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
