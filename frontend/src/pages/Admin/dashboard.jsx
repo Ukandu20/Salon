@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import classes from "./dashboard.module.css";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { getAll, getBookingCountByMonth, getTotalUserCount, getTotalUserCountByMonth, getUniqueUserCount, getUniqueUserCountByMonth } from "../../bookingService";
-import { DatePickerWithRange } from "../../components/ui/DatePickerWithRange";
-import { DataTable } from "../../components/ui/DataTable";
+import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
+import { DataTable } from "@/components/ui/DataTable";
 import { TARGET_CARD_LENGTH } from "./Constants";
 import RecentBookings from "./RecentBookings";
 import Chart from "@/components/ui/charts"; // Updated import
 
 export default function Dashboard() {
-  const [totalBookings, setTotalBookings] = useState(0);
-  const [monthlyBookings, setMonthlyBookings] = useState(0);
+  const [totalBookings, setTotalBookings] = useState(0); //State for total bookings
+  const [monthlyBookings, setMonthlyBookings] = useState(0); // State for monthly bookings
   const [totalUsers, setTotalUsers] = useState(0);
   const [uniqueUsers, setUniqueUsers] = useState(0);
   const [bookingGrowthPercentage, setBookingGrowthPercentage] = useState(0);
@@ -75,11 +75,11 @@ export default function Dashboard() {
         const uniqueUserGrowth = previousUniqueUserCount === 0 ? 100 : ((currentUniqueUserCount - previousUniqueUserCount) / previousUniqueUserCount) * 100;
         setUniqueUserGrowthPercentage(uniqueUserGrowth.toFixed(1)); // Set the unique user growth percentage
 
-        // Calculate monthly revenue
+        // Calculate monthly revenue only for completed bookings
         const currentMonthRevenue = bookingsData
           .filter(booking => {
             const bookingDate = new Date(booking.date);
-            return bookingDate.getMonth() + 1 === currentMonth && bookingDate.getFullYear() === currentYear;
+            return booking.status === 'completed' && bookingDate.getMonth() + 1 === currentMonth && bookingDate.getFullYear() === currentYear;
           })
           .reduce((acc, booking) => acc + booking.price, 0);
 
@@ -216,7 +216,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-2 lg:grid-rows-">
+        <section className="border-primary grid gap-4 md:grid-cols-1 lg:grid-cols-2 lg:grid-rows-2">
           <Card className="bg-transparent">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-2xl font-bold">

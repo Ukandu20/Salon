@@ -5,6 +5,8 @@ import Services from './pages/Services/Services';
 import Appointments from './pages/Appointments/Appointments';
 import Gallery from './pages/Gallery/Gallery';
 import Admin from './pages/Admin/Admin';
+import Login from './pages/Login/Login';
+import Signup from './pages/Login/SignUp';
 
 
 
@@ -17,6 +19,8 @@ export default function Approutes() {
         <Route path="/Gallery" element={<Gallery />} />
         <Route path='/appointments' element={<Appointments />} />
         <Route path='/admin' element={<Admin />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
     </Routes>
   )
 }

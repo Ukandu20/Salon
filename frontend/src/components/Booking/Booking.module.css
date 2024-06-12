@@ -8,7 +8,7 @@
     margin: 0 auto;
     margin-bottom: 100px;
     padding: 20px;    
-    width: 80%; /* Adjusted for better spacing */
+    width: 50%; /* Adjusted for better spacing */
 }
 
 .heading {
@@ -34,11 +34,18 @@ form {
     flex-wrap: wrap; /* Wraps children to next line on small screens */
 }
 
-.infoGrp, .dateGrp {
+.infoGrp {
     display: flex;
     flex-direction: column;
     gap: 20px;
     flex: 1; /* Each group takes equal space */
+}
+
+.dateGrp {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
 }
 
 .formGroup {
@@ -76,9 +83,10 @@ input::placeholder {
     margin-top: 20px; /* Adds space between form groups and button */
     width: 100%; /* Button stretches to match form width */
     text-align: center;
+    align-items: flex-start;
 }
 
 .button {
-    align-items: center;
+    align-items: flex-start;
 }
 
