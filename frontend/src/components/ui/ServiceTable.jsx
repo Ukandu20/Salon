@@ -63,7 +63,7 @@ export function ServicesTable({ data, itemsPerPage, totalPages, currentPage, onP
   // Handle save action
   const handleSaveService = async (serviceId) => {
     try {
-      await axios.put(`http://localhost:5000/api/services/${serviceId}`, formData);
+      await axios.put(`/api/services/${serviceId}`, formData);
       toast({
         title: 'Service updated',
         status: 'success',
@@ -90,7 +90,7 @@ export function ServicesTable({ data, itemsPerPage, totalPages, currentPage, onP
   // Handle delete action
   const handleDeleteService = async (serviceId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/services/${serviceId}`);
+      await axios.delete(`/api/services/${serviceId}`);
       toast({
         title: 'Service deleted',
         status: 'success',

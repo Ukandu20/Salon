@@ -33,4 +33,5 @@ router.get('/', (req, res) => {
 router.use('/api/bookings', bookingRouter);
 router.use('/api/services', serviceRouter); // Add service routes
 
+
 export default router;

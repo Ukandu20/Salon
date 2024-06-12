@@ -1,14 +1,14 @@
 import express from 'express';
 import cors from 'cors';
-import router from './routers/router.js';
-import bookingRouter from './routers/booking.router.js';
+import userRouter from './routers/user.router.js';
+import bookingRouter from './routers/booking.router.js'
 import serviceRouter from './routers/service.router.js';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import auth from './middleware/auth.js';
+import isAdmin from './middleware/isAdmin.js';
 
 dotenv.config();
-
-console.log('MongoDB URI:', process.env.MONGO_URI);
 
 mongoose.connect(process.env.MONGO_URI, {
   serverSelectionTimeoutMS: 30000,
@@ -29,9 +29,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
+app.use('/api/users', userRouter);
 app.use('/api/bookings', bookingRouter);
 app.use('/api/services', serviceRouter);
-app.use('/', router);
+app.use('/admin', auth, isAdmin, (req, res) => {
+  res.send('Welcome to the admin dashboard');
+});
 
 app.use((err, req, res, next) => {
   console.error('Server Error:', err.stack);

@@ -27,7 +27,7 @@ const ServicesComponent = () => {
   // Function to fetch services from the API
   const fetchServices = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/services');
+      const response = await axios.get('/api/services');
       setServices(response.data);
     } catch (error) {
       console.error('Failed to fetch services:', error.message);
@@ -44,7 +44,7 @@ const ServicesComponent = () => {
   const handleServiceSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/services', formData);
+      await axios.post('/api/services', formData);
       fetchServices();
       resetFormData();
       toast({
@@ -83,7 +83,7 @@ const ServicesComponent = () => {
   // Handle service deletion
   const handleDeleteService = async (serviceId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/services/${serviceId}`);
+      await axios.delete(`/api/services/${serviceId}`);
       fetchServices();
       toast({
         title: 'Service deleted',
